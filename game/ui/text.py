@@ -9,7 +9,7 @@ from game import config
 
 # From Eggzy
 
-font_mikachan_big = pygame.font.Font("fonts/mikachan-PB.otf", 40)
+font_mikachan_big = pygame.font.Font("fonts/mikachan-PB.otf", 50)
 font_mikachan = pygame.font.Font("fonts/mikachan-PB.otf", 20)
 
 def get_char_image_and_width(char):

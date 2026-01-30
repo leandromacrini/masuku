@@ -365,10 +365,11 @@ class Game:
             if sprite_dir:
                 intro_image_name = f"{sprite_dir}/{intro_image_name}"
             boss_image = images.load(intro_image_name)
-            screen.blit(boss_image, (WIDTH // 2 - boss_image.get_width() // 2, HEIGHT // 2 - boss_image.get_height() // 2 - 40))
+            screen.blit(boss_image, (WIDTH // 2 - boss_image.get_width() // 2, HEIGHT // 2 - boss_image.get_height() // 2))
 
         title = getattr(boss, "title_name", "BOSS")
-        draw_text_otf(screen, title, WIDTH // 2 - 200, HEIGHT - 80, font_mikachan_big, (255,255,255), True)
+        draw_text_otf(screen, title, WIDTH // 2 - 198, HEIGHT - 78, font_mikachan_big, (0,0,0))
+        draw_text_otf(screen, title, WIDTH // 2 - 200, HEIGHT - 80, font_mikachan_big, (255,255,255))
 
 
     def draw_background(self, screen):
