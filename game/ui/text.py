@@ -9,7 +9,8 @@ from game import config
 
 # From Eggzy
 
-font_osake = pygame.font.Font("fonts/mikachan-PB.otf", 20)
+font_mikachan_big = pygame.font.Font("fonts/mikachan-PB.otf", 40)
+font_mikachan = pygame.font.Font("fonts/mikachan-PB.otf", 20)
 
 def get_char_image_and_width(char):
     # Return width of given character. ord() gives the ASCII/Unicode code for the given character.
@@ -35,8 +36,11 @@ def get_char_image_width_and_height(char):
 def text_width(text):
     return sum([get_char_image_and_width(c)[1] for c in text])
 
-def draw_text_otf(screen, text, x, y, color= (0,0,0)):
-    surf = font_osake.render(text, True, color )
+def draw_text_otf(screen, text, x, y, font=font_mikachan, color= (0,0,0), italic=False, bold=False, underline=False):
+    font.set_italic(italic)
+    font.set_bold(bold)
+    font.set_underline(underline)
+    surf = font.render(text, True, color )
     screen.blit(surf, (x, y))
 
 def draw_text_scaled(screen, text, X, Y, scale = 1):
