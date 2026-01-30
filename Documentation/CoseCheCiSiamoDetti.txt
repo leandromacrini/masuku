@@ -1,0 +1,53 @@
+=== Gameplay ===
+    * Maschere nell’inventario in una barra sotto.
+        - Implementare la selezione tramite i tasti (L1/R1)
+    * Animazione cambio maschera (NiceToHave)
+        1. Prende la nuova maschera
+        2. Si toglie quella vecchia
+        3. Si mette quella nuova
+        4. Butta quella vecchia
+    * Abilità delle maschere raccolte.
+    * Alcuni nemici perdono le maschere quando muoiono.
+    * Nemici:
+        - [Sgherri]: quando sconfitti la maschera si rompe e  scappano via. Sono dei nemici stupidi (Kappa) con testa da umano e corpo da Kappa. Possibilità con probabilità p di scappare e non proseguire l'incontro.
+        - [MiniBoss]: quando sconfitti, perdono la maschera e ti lasciamo un qualcosa che ti aumenta il potere>
+            + [Tengu] => Ti dona la capacità di volare.
+            + [Tanuki] => Ti da la possibilità o di scompare oppure immortale per tot secondi
+            + [Yuki-onna] (donna ghiaccio) => freeze per tot secondi [Da implementare quando il colpo è andato a segno]
+            + [Kasaobake] (ombrello) => Ti dona la capacità di fare il dash
+        - Boss Finale
+            + [Hinari] => dice la verità e della lore del gioco.
+
+    * # di maschere da aggiungere.
+    * Corsa => colpo in corsa.
+    * Dash => con l'ombrello.
+    * Aggiungere Yokai che fa danno continuo (veleno/fuoco).
+    * Togliere i veicoli che sono presenti (dal gioco del libro).
+    * Introduzione del personaggio/boss alla giapponese anni 80 (si veda Godzilla)
+
+
+=== Environment ===
+    * Possibilità di salto dei buchi
+    * Agenti atmosferici, che interagiscono con il personaggio.
+        - Pioggia
+        - Vento
+        - Neve (???)
+
+=== HUD ===
+    * Vita:
+        + Nemici: assolutamente NO.
+        + Protagonista
+            - Che si ricarica da sola.
+            - Tramite gli Onigiri.
+        + Boss
+            - Stile cartoonesco: mostra vita.
+            - Stile realistico: non viene mostrata la vita.
+    * Boss
+        + Blinkano quando colpiti.
+
+=== AUDIO ===
+    Usare FAMISTUDIO
+
+=== LANGUAGE ===
+    - Python
+    - Visual Studio Code
