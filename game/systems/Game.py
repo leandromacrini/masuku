@@ -6,11 +6,12 @@ import pygame
 from pgzero.builtins import images, sounds
 
 from game.config import *
-from game.utils import Profiler
+from game.utils import Profiler, move_towards
 import game.stages.setup_stages as stage_setup
-from game.ui.text import draw_text, draw_text_otf, font_mikachan
+from game.ui.text import draw_text, draw_text_otf, font_mikachan, font_mikachan_big
 import game.runtime as runtime
 from game.entities.Player import Player
+from game.stages.Stage import BossStage
 
 from game.entities.Enemy import Enemy
 
@@ -65,6 +66,15 @@ class Game:
         self.current_text = self.intro_text
         self.displayed_text = ""
 
+        self.boss_intro_active = False
+        self.boss_intro_phase = None
+        self.boss_intro_timer = 0
+        self.boss_intro_boss = None
+        self.boss_intro_target_x = None
+        self.boss_intro_stage = None
+        self.boss_intro_scroll_target_x = None
+        self.boss_intro_overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+
     def next_stage(self):
         # A stage is over when we've scrolled to its max_scroll_x and there are no enemies left
         # Enemies are created when we start scrolling (or here, if no scrolling is to take place or is already taking place)
@@ -104,6 +114,10 @@ class Game:
         self.weapons.extend(stage.weapons)
         self.powerups.extend(stage.powerups)
 
+        if isinstance(stage, BossStage) and not stage.intro_played:
+            self.prepare_boss_intro(stage)
+            stage.intro_played = True
+
     def spawn_enemy(self, enemy):
         # Called by Portal
         self.enemies.append(enemy)
@@ -133,6 +147,10 @@ class Game:
                     self.text_active = False
                     self.timer = 0
 
+            return
+
+        if self.boss_intro_active:
+            self.update_boss_intro()
             return
 
         if DEBUG_SHOW_ATTACKS:
@@ -234,6 +252,9 @@ class Game:
         if self.text_active:
             draw_text(screen, self.displayed_text, 50, 50)
 
+        if self.boss_intro_active and self.boss_intro_phase == "title":
+            self.draw_boss_intro(screen)
+
         # Debug
         if DEBUG_SHOW_SCROLL_POS:
             screen.draw.text(f"{self.scroll_offset} {self.max_scroll_offset_x}", (0, 25))
@@ -275,11 +296,79 @@ class Game:
 
     def draw_ui_boss(self,screen):
         for enemy in self.enemies:
-            if enemy.enemy_type == Enemy.EnemyType.MID_BOSS or enemy.enemy_type == Enemy.EnemyType.FINAL_BOSS :
+            if enemy.enemy_type in [Enemy.EnemyType.MID_BOSS, Enemy.EnemyType.FINAL_BOSS] and not self.boss_intro_active :
                 draw_text_otf(screen, enemy.title_name, BOSS_NAME_X_POS + 1, BOSS_NAME_Y_POS + 1, font_mikachan, BOSS_COLOR_SHADOW, True )
                 draw_text_otf(screen, enemy.title_name, BOSS_NAME_X_POS, BOSS_NAME_Y_POS, font_mikachan, BOSS_COLOR_RED, True)
                 health_bar_w = int((enemy.health / enemy.start_health) * BOSS_HEALTH_STAMINA_BAR_WIDTH)
                 screen.surface.blit(images.load("ui/health_boss"), (BOSS_HEALTH_BAR_X_POS, BOSS_HEALTH_BAR_Y_POS), Rect(0, 0, health_bar_w, BOSS_HEALTH_STAMINA_BAR_HEIGHT))
+
+    def prepare_boss_intro(self, stage):
+        self.boss_intro_active = True
+        self.boss_intro_phase = "scroll"
+        self.boss_intro_timer = 0
+        self.boss_intro_stage = stage
+        self.boss_intro_boss = stage.boss
+        self.boss_intro_target_x = stage.boss.vpos.x
+        self.boss_intro_scroll_target_x = stage.max_scroll_x
+        start_x = max(self.scroll_offset.x + WIDTH + 120, self.boss_intro_target_x + 200)
+        stage.boss.vpos.x = start_x
+        stage.boss.facing_x = -1
+        stage.boss.walking = True
+
+    def update_boss_intro(self):
+        if self.boss_intro_boss is None or self.boss_intro_stage is None:
+            self.boss_intro_active = False
+            return
+
+        boss = self.boss_intro_boss
+        stage = self.boss_intro_stage
+
+        if self.boss_intro_phase == "scroll":
+            # Finish scroll before boss enters
+            if self.scroll_offset.x < self.boss_intro_scroll_target_x:
+                diff = self.boss_intro_scroll_target_x - self.scroll_offset.x
+                scroll_speed = self.player.x / (WIDTH / 4)
+                scroll_speed = min(diff, max(2.0, scroll_speed))
+                self.scroll_offset.x += scroll_speed
+                self.boundary.left = self.scroll_offset.x
+            if self.scroll_offset.x >= self.boss_intro_scroll_target_x:
+                self.boss_intro_phase = "walk"
+        elif self.boss_intro_phase == "walk":
+            boss.walking = True
+            boss.frame += 1
+            boss.vpos.x, _ = move_towards(boss.vpos.x, self.boss_intro_target_x, stage.intro_walk_speed)
+            if boss.vpos.x == self.boss_intro_target_x:
+                boss.walking = False
+                boss.frame = 0
+                self.boss_intro_phase = "title"
+                self.boss_intro_timer = 0
+        elif self.boss_intro_phase == "title":
+            self.boss_intro_timer += 1
+            if self.boss_intro_timer >= stage.intro_hold_frames:
+                self.boss_intro_active = False
+                self.boss_intro_phase = None
+                self.boss_intro_timer = 0
+
+    def draw_boss_intro(self, screen):
+        if self.boss_intro_boss is None or self.boss_intro_stage is None:
+            return
+
+        stage = self.boss_intro_stage
+        boss = self.boss_intro_boss
+
+        self.boss_intro_overlay.fill((0, 0, 0, stage.intro_overlay_alpha))
+        screen.surface.blit(self.boss_intro_overlay, (0, 0))
+
+        intro_image_name = getattr(boss, "boss_intro_image", None)
+        if intro_image_name:
+            sprite_dir = SPRITE_DIRS.get(boss.sprite, "")
+            if sprite_dir:
+                intro_image_name = f"{sprite_dir}/{intro_image_name}"
+            boss_image = images.load(intro_image_name)
+            screen.blit(boss_image, (WIDTH // 2 - boss_image.get_width() // 2, HEIGHT // 2 - boss_image.get_height() // 2 - 40))
+
+        title = getattr(boss, "title_name", "BOSS")
+        draw_text_otf(screen, title, WIDTH // 2 - 200, HEIGHT - 80, font_mikachan_big, (255,255,255), True)
 
 
     def draw_background(self, screen):

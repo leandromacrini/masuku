@@ -155,7 +155,7 @@ try:
     mixer.quit()
     mixer.init(44100, -16, 2, 1024)
 
-    music.play("theme")
+    music.play("theme_jap")
     music.set_volume(0.3)
 except Exception:
     # If an error occurs (e.g. no sound hardware), ignore it

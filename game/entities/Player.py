@@ -12,9 +12,10 @@ from random import choice
 class Player(Fighter):
     def __init__(self, controls):
         # Anchor point just above bottom of sprite
-        super().__init__(pos=(400, 400), anchor=("center",256), speed=Vector2(3,2), sprite="hero", health=30, lives=3, separate_shadow=True)
+        super().__init__(pos=(400, 400), anchor=("center",256), speed=Vector2(3,2), sprite="hero", health=30, lives=3, separate_shadow=True, anim_update_rate=16)
         self.controls = controls
         self.extra_life_timer = 0
+        self.stand_frames = 4
 
     def update(self):
         super().update()

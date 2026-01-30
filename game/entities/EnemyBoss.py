@@ -13,6 +13,7 @@ class EnemyBoss(Enemy):
         super().__init__(pos, "boss", ("boss_lpunch", "boss_rpunch", "boss_kick", "boss_grab_player",),
                          speed=Vector2(0.9,0.8), health=25, stamina=1000, start_timer=start_timer, anchor_y=280,
                          half_hit_area=Vector2(30, 20), colour_variant=randint(0,2), score=75)
+        self.stand_frames = 2
 
     def make_decision(self):
         # Boss can pick up a barrel, if they're not currently holding one

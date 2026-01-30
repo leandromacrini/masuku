@@ -7,3 +7,15 @@ class Stage:
         self.max_scroll_x = max_scroll_x
         self.weapons = weapons or []
         self.weather = weather
+
+
+class BossStage(Stage):
+    def __init__(self, boss, max_scroll_x, weapons=None, powerups=None, weather=None):
+        super().__init__([boss], max_scroll_x, weapons=weapons, powerups=powerups, weather=weather)
+        self.boss = boss
+        self.intro_played = False
+        # Fixed intro settings shared by all boss stages
+        self.intro_walk_speed = 3.0
+        self.intro_hold_frames = 250
+        self.intro_overlay_alpha = 160
+        self.intro_player_stop_offset = 220

@@ -39,6 +39,7 @@ class Fighter(ScrollHeightActor, ABC):
         self.sprite = sprite
 
         self.anim_update_rate = anim_update_rate
+        self.stand_frames = 2
 
         self.facing_x = 1
 
@@ -261,7 +262,7 @@ class Fighter(ScrollHeightActor, ABC):
                 else:
                     # No movement, reset frame to standing
                     self.walking = False
-                    self.frame = 7  # Resetting frame to 7 rather than zero fixes an issue where it looks weird if you only walk for a fraction of a second
+                    self.frame += 1  # Resetting frame to 7 rather than zero fixes an issue where it looks weird if you only walk for a fraction of a second
             else:
                 # Currently attacking
                 self.frame += 1
@@ -379,7 +380,7 @@ class Fighter(ScrollHeightActor, ABC):
 
     def draw(self, offset):
         # Determine sprite to use based on our current action
-        self.image = self.determine_sprite()
+        z = self.determine_sprite()
 
         super().draw(offset)
 
@@ -464,10 +465,15 @@ class Fighter(ScrollHeightActor, ABC):
                 frame = (self.frame // self.anim_update_rate) % 4  # 4 frames of walking animation
             else:
                 # Standing
-                frame = 0
                 # Use anim_type stand or walk depending on whether we have a weapon - we only have 'walk' sprites
                 # for weapons
-                anim_type = "walk" if self.weapon is not None else "stand"
+                if(self.weapon is None):
+                    anim_type = "stand"
+                    frame = (self.frame // self.anim_update_rate) % self.stand_frames
+                else:
+                    anim_type = "walk"
+                    frame = 0
+                
 
             # Add the weapon name to the walking/standing animation
             # This isn't done for weapon attack animations, because barrel is released during the throw animation

@@ -8,7 +8,7 @@ from game.entities.EnemyKasaobake import EnemyKasaobake
 from game.entities.ExtraLifePowerup import ExtraLifePowerup
 from game.entities.HealthPowerup import HealthPowerup
 from game.entities.Barrel import Barrel
-from game.stages.Stage import Stage
+from game.stages.Stage import Stage, BossStage
 
 STAGES = ()
 
@@ -18,10 +18,10 @@ def setup_stages():
     STAGES = (
         Stage(max_scroll_x=200, enemies=[], weather={"type": "none"}),
 
-        Stage(max_scroll_x=300,
-              enemies=[EnemyKasaobake(pos=(1000, 400))],
-              weather={"type": "rain", "intensity": 140, "wind": 0.0, "speed": 1.0, "length": 1.0, "ramp_seconds": 2.0},
-              ),
+        BossStage(max_scroll_x=300,
+                  boss=EnemyKasaobake(pos=(1000, 400)),
+                  weather={"type": "rain", "intensity": 140, "wind": 0.0, "speed": 1.0, "length": 1.0, "ramp_seconds": 2.0},
+                  ),
 
         Stage(max_scroll_x=400, enemies=[], weather={"type": "none"}),
       
