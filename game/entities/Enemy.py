@@ -8,6 +8,7 @@ from game.config import *
 from game.utils import *
 from game.actors.Fighter import Fighter
 from game.combat.attacks_data import ATTACKS
+from game.entities.Barrel import Barrel
 import game.runtime as runtime
 
 

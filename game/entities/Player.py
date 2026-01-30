@@ -4,6 +4,10 @@ from game.config import *
 from game.actors.Fighter import Fighter
 import game.runtime as runtime
 
+from game.utils import sign
+from game.combat.attacks_data import ATTACKS
+from random import choice
+
 
 class Player(Fighter):
     def __init__(self, controls):
