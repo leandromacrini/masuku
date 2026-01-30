@@ -11,6 +11,7 @@ import game.stages.setup_stages as stage_setup
 from game.ui.text import draw_text
 import game.runtime as runtime
 from game.entities.Player import Player
+from game.systems.Weather import create_weather
 
 fullscreen_black_bmp = pygame.Surface((WIDTH, HEIGHT))
 fullscreen_black_bmp.fill((0, 0, 0))
@@ -70,10 +71,19 @@ class Game:
         if self.stage_index < len(stage_setup.STAGES):
             stage = stage_setup.STAGES[self.stage_index]
             self.max_scroll_offset_x = stage.max_scroll_x
+            if stage.weather is None:
+                weather = runtime.get_weather()
+                if weather is not None:
+                    weather.set_target(0)
+            else:
+                runtime.set_weather(create_weather(stage.weather))
             if self.scrolling or self.max_scroll_offset_x <= self.scroll_offset.x:
                 print("No scrolling or already scrolling - create stage objects")
                 self.create_stage_objects(stage)
         else:
+            weather = runtime.get_weather()
+            if weather is not None:
+                weather.set_target(0)
             # If stage_index has reached len(STAGES), we go into the outro state (like intro text, but with different text)
             # After that, check_won() will return True and the game state code will pick up on this and end the game
             if not self.text_active:
@@ -106,6 +116,11 @@ class Game:
             p = Profiler()
 
         self.timer += 1
+        weather = runtime.get_weather()
+        if weather is not None:
+            weather.update()
+            if weather.is_finished():
+                runtime.set_weather(None)
 
         if self.text_active:
             # Every 6 frames, update the displayed text to display an extra character, and make a sound if the
@@ -192,6 +207,9 @@ class Game:
             print("objs: {0}".format(p.get_ms()))
 
         p = Profiler()
+        weather = runtime.get_weather()
+        if weather is not None:
+            weather.draw(screen)
 
         # If player can scroll the level, show flashing arrow
         if self.scroll_offset.x < self.max_scroll_offset_x and (self.timer // 30) % 2 == 0:
