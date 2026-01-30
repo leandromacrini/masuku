@@ -14,8 +14,6 @@
 import pgzero
 import pgzrun
 import pygame
-import builtins
-import os
 import sys
 from pygame import mixer
 from pgzero.builtins import images, music
@@ -72,21 +70,10 @@ def update_controls():
         joystick_controls.update()
 
 
-def ensure_screen_global():
-    # Make the Pygame Zero screen instance available across modules via builtins.
-    screen_obj = globals().get("screen")
-    if screen_obj is None:
-        return
-    if getattr(builtins, "screen", None) is not screen_obj:
-        builtins.screen = screen_obj
-
-
 # Pygame Zero calls the update and draw functions each frame
 
 def update():
-    global state, game, total_frames
-
-    ensure_screen_global()
+    global state, game, total_frames, screen
 
     total_frames += 1
 
@@ -133,21 +120,21 @@ def update():
 
 
 def draw():
-    ensure_screen_global()
+    global screen
 
     if state == State.TITLE:
         # Draw logo
         logo_img = images.load("ui/title0") if total_frames // 20 % 2 == 0 else images.load("ui/title1")
         screen.blit(logo_img, (WIDTH // 2 - logo_img.get_width() // 2, HEIGHT // 2 - logo_img.get_height() // 2))
 
-        draw_text(f"PRESS {config.SPECIAL_FONT_SYMBOLS['xb_a']} OR Z", WIDTH // 2, HEIGHT - 50, True)
+        draw_text(screen, f"PRESS {config.SPECIAL_FONT_SYMBOLS['xb_a']} OR Z", WIDTH // 2, HEIGHT - 50, True)
 
     elif state == State.CONTROLS:
         screen.fill((0, 0, 0))
         screen.blit("ui/menu_controls", (0, 0))
 
     elif state == State.PLAY:
-        game.draw()
+        game.draw(screen)
 
     elif state == State.GAME_OVER:
         # Draw game over screen

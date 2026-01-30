@@ -1,6 +1,8 @@
 # Global runtime references shared across modules.
 
 game = None
+screen = None
+
 debug_drawcalls = []
 
 
@@ -11,3 +13,4 @@ def set_game(value):
 
 def get_game():
     return game
+

@@ -24,7 +24,7 @@ def text_width(text):
     return sum([get_char_image_and_width(c)[1] for c in text])
 
 
-def draw_text(text, x, y, centre=False):
+def draw_text(screen, text, x, y, centre=False):
     # Note that the centre option does not work correctly for text with line breaks
     if centre:
         x -= text_width(text) // 2

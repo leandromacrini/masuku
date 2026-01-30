@@ -46,7 +46,7 @@ class EnemyScooterboy(Enemy):
             if self.scooter_speed < self.scooter_target_speed:
                 # Currently speeding up
                 frame = min(self.frame // 5, 2)
-            return f"{self.sprite}_ride_{facing_id}_{frame}_{self.colour_variant}"
+            return f"characters/scooterboy/{self.sprite}_ride_{facing_id}_{frame}_{self.colour_variant}"
         else:
             return super().determine_sprite()
 

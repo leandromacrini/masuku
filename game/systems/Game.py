@@ -1,9 +1,9 @@
 from random import choice, randint
-import sys
-
 
 from pygame import Vector2, Rect
-import pygame, sys
+import pygame
+
+from pgzero.builtins import images, sounds
 
 from game.config import *
 from game.utils import Profiler
@@ -175,9 +175,9 @@ class Game:
         if DEBUG_PROFILING:
             print(f"update: {p.get_ms()}")
 
-    def draw(self):
+    def draw(self, screen):
         # Draw background
-        self.draw_background()
+        self.draw_background(screen)
 
         # Draw all objects, lowest on screen first
         # Y pos used is modified by result of get_draw_order_offset, for certain cases where we need more nuance than
@@ -197,7 +197,7 @@ class Game:
         if self.scroll_offset.x < self.max_scroll_offset_x and (self.timer // 30) % 2 == 0:
             screen.blit("ui/arrow", (WIDTH-450, 120))
 
-        self.draw_ui()
+        self.draw_ui(screen)
 
         if DEBUG_PROFILING:
             print("icons: {0}".format(p.get_ms()))
@@ -216,7 +216,7 @@ class Game:
 
         # Show intro text
         if self.text_active:
-            draw_text(self.displayed_text, 50, 50)
+            draw_text(screen, self.displayed_text, 50, 50)
 
         # Debug
         if DEBUG_SHOW_SCROLL_POS:
@@ -234,7 +234,7 @@ class Game:
             # Show profiler timing for everything not in another category
             print("rest: {0}".format(p.get_ms()))
 
-    def draw_ui(self):
+    def draw_ui(self, screen):
         # Show status bar and player health, stamina and lives
         # Have to use the actual Pygame blit rather than Pygame Zero version so that we can specify which area of the
         # source image to copy
@@ -254,9 +254,9 @@ class Game:
             screen.blit(f"ui/status_life{sprite_idx}", (i * 46 - 55, -35))
 
         # Show score
-        draw_text(f"{self.score:04}", WIDTH // 2, 0, True)
+        draw_text(screen, f"{self.score:04}", WIDTH // 2, 0, True)
 
-    def draw_background(self):
+    def draw_background(self, screen):
         # Draw two copies of road background
         p = Profiler()
         road1_x = -(self.scroll_offset.x % WIDTH)
