@@ -9,14 +9,14 @@
     * Abilità delle maschere raccolte.
     * Alcuni nemici perdono le maschere quando muoiono.
     * Nemici:
-        - [Sgherri]: quando sconfitti la maschera si rompe e  scappano via. Sono dei nemici stupidi (Kappa) con testa da umano e corpo da Kappa. Possibilità con probabilità p di scappare e non proseguire l'incontro.
+        - [Sgherri]: quando sconfitti la maschera si rompe e scappano via. Sono dei nemici stupidi (Kappa) con testa da umano e corpo da Kappa. Possibilità con probabilità P di scappare e non proseguire l'incontro.
         - [MiniBoss]: quando sconfitti, perdono la maschera e ti lasciamo un qualcosa che ti aumenta il potere>
             + [Tengu] => Ti dona la capacità di volare.
             + [Tanuki] => Ti da la possibilità o di scompare oppure immortale per tot secondi
             + [Yuki-onna] (donna ghiaccio) => freeze per tot secondi [Da implementare quando il colpo è andato a segno]
             + [Kasaobake] (ombrello) => Ti dona la capacità di fare il dash
         - Boss Finale
-            + [Hinari] => dice la verità e della lore del gioco.
+            + [Hinari] => dice la verità della lore del gioco.
 
     * # di maschere da aggiungere.
     * Corsa => colpo in corsa.
