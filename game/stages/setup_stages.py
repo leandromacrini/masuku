@@ -20,7 +20,7 @@ def setup_stages():
 
         Stage(max_scroll_x=300,
               enemies=[EnemyKasaobake(pos=(1000, 400))],
-              weather={"type": "leaves", "intensity": 70, "wind": 0.0, "speed": 0.3, "length": 1.0, "ramp_seconds": 2.0},
+              weather={"type": "rain", "intensity": 140, "wind": 0.0, "speed": 1.0, "length": 1.0, "ramp_seconds": 2.0},
               ),
 
         Stage(max_scroll_x=400, enemies=[], weather={"type": "none"}),
