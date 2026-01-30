@@ -3,7 +3,7 @@ from random import choice, randint
 from pygame import Vector2, Rect
 import pygame
 
-from pgzero.builtins import images
+from pgzero.builtins import images, sounds
 
 from game.config import *
 from game.utils import Profiler

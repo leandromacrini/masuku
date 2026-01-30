@@ -36,7 +36,7 @@ def setup_stages():
         #       ),
 
         Stage(max_scroll_x=300,
-              enemies=[EnemyVax(pos=(1000, 400))],
+              enemies=[EnemyScooterboy(pos=(1000, 400))],
               #weapons=[Barrel((300, 400))],
               #powerups=[HealthPowerup(pos=(1100, MIN_WALK_Y)), ExtraLifePowerup(pos=(1000, MIN_WALK_Y))]
               ),
