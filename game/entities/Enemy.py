@@ -24,6 +24,11 @@ class Enemy(Fighter, ABC):
         PORTAL = 6
         PORTAL_EXPLODE = 7
 
+    class EnemyType(Enum):
+        NORMAL = 0
+        MID_BOSS = 1
+        FINAL_BOSS = 2
+
     def __init__(self, pos, name, attacks, start_timer,
                  speed=Vector2(1, 1),
                  health=15,
@@ -33,7 +38,8 @@ class Enemy(Fighter, ABC):
                  half_hit_area=Vector2(25, 20),
                  colour_variant=None,
                  hit_sound=None,
-                 score=10):
+                 score=10,
+                 enemy_type=EnemyType.NORMAL):
         # Slower animation speed than Hero
         super().__init__(pos, ("center",anchor_y), speed=speed, sprite=name, health=health, stamina=stamina,
                          anim_update_rate=14, half_hit_area=half_hit_area, colour_variant=colour_variant, hit_sound=hit_sound)
@@ -48,6 +54,8 @@ class Enemy(Fighter, ABC):
         # e.g. on starting a new stage we might not want them to start targeting the player until they have
         # scrolled onto the screen
         self.state = Enemy.State.PAUSE
+        self.enemy_type = enemy_type
+        self.title_name = name
         self.state_timer = start_timer
 
         self.attacks = attacks
@@ -173,6 +181,9 @@ class Enemy(Fighter, ABC):
 
     def determine_drop_weapon(self):
         return False
+
+    def enemy_type(self):
+        return Enemy.Type.NORMAL
 
     def get_opponents(self):
         return [runtime.game.player]

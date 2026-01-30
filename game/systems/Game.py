@@ -8,9 +8,11 @@ from pgzero.builtins import images, sounds
 from game.config import *
 from game.utils import Profiler
 import game.stages.setup_stages as stage_setup
-from game.ui.text import draw_text
+from game.ui.text import draw_text, draw_text_scaled
 import game.runtime as runtime
 from game.entities.Player import Player
+
+from game.entities.Enemy import Enemy
 
 fullscreen_black_bmp = pygame.Surface((WIDTH, HEIGHT))
 fullscreen_black_bmp.fill((0, 0, 0))
@@ -199,6 +201,8 @@ class Game:
 
         self.draw_ui(screen)
 
+        self.draw_ui_boss(screen)
+
         if DEBUG_PROFILING:
             print("icons: {0}".format(p.get_ms()))
             p = Profiler()
@@ -255,6 +259,15 @@ class Game:
 
         # Show score
         draw_text(screen, f"{self.score:04}", WIDTH // 2, 0, True)
+
+
+    def draw_ui_boss(self,screen):
+        for enemy in self.enemies:
+            if enemy.enemy_type == Enemy.EnemyType.MID_BOSS or enemy.enemy_type == Enemy.EnemyType.FINAL_BOSS :
+                draw_text_scaled(screen, enemy.title_name, BOSS_NAME_X_POS, BOSS_NAME_Y_POS , 0.5)
+                health_bar_w = int((enemy.health / enemy.start_health) * BOSS_HEALTH_STAMINA_BAR_WIDTH)
+                screen.surface.blit(images.load("ui/health_boss"), (BOSS_HEALTH_BAR_X_POS, BOSS_HEALTH_BAR_Y_POS), Rect(0, 0, health_bar_w, BOSS_HEALTH_STAMINA_BAR_HEIGHT))
+
 
     def draw_background(self, screen):
         # Draw two copies of road background
