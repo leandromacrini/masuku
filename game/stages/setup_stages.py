@@ -15,25 +15,25 @@ STAGES = ()
 def setup_stages():
     global STAGES
     STAGES = (
-        # Stage(max_scroll_x=0, enemies=[]),
+        Stage(max_scroll_x=0, enemies=[]),
 
-        # Stage(max_scroll_x=200,
-        #       enemies=[],
-        #       #enemies=[EnemyScooterboy(pos=(200, 400))],
-        #       #enemies=[EnemyPortal(pos=(600, 400), enemies=(EnemyVax, EnemyHoodie), spawn_interval=60, spawn_interval_change=30)],
-        #       #enemies=[EnemyScooterboy(pos=(200, 400)),EnemyScooterboy(pos=(100, 300)),EnemyScooterboy(pos=(300, 600)),EnemyScooterboy(pos=(200, 500)),],
-        #       #enemies=[EnemyVax(pos=(200, 400)),EnemyVax(pos=(100, 300)),EnemyVax(pos=(300, 600)),EnemyVax(pos=(200, 500)),],
-        #       #enemies=[EnemyBoss(pos=(500, 380))],
-        #       weapons=[Barrel((300, 400))]
-        #       ),
+        Stage(max_scroll_x=200,
+              enemies=[],
+              #enemies=[EnemyScooterboy(pos=(200, 400))],
+              #enemies=[EnemyPortal(pos=(600, 400), enemies=(EnemyVax, EnemyHoodie), spawn_interval=60, spawn_interval_change=30)],
+              #enemies=[EnemyScooterboy(pos=(200, 400)),EnemyScooterboy(pos=(100, 300)),EnemyScooterboy(pos=(300, 600)),EnemyScooterboy(pos=(200, 500)),],
+              #enemies=[EnemyVax(pos=(200, 400)),EnemyVax(pos=(100, 300)),EnemyVax(pos=(300, 600)),EnemyVax(pos=(200, 500)),],
+              #enemies=[EnemyBoss(pos=(500, 380))],
+              weapons=[Barrel((300, 400))]
+              ),
 
-        # Stage(max_scroll_x=250,
-        #       #enemies=[EnemyScooterboy(pos=(200, 400))],
-        #       enemies=[EnemyPortal(pos=(600, 400), enemies=(EnemyVax, EnemyHoodie), spawn_interval=120, spawn_interval_change=30, start_timer=300)],
-        #       #enemies=[EnemyScooterboy(pos=(200, 400)),EnemyScooterboy(pos=(100, 300)),EnemyScooterboy(pos=(300, 600)),EnemyScooterboy(pos=(200, 500)),],
-        #       #enemies=[EnemyBoss(pos=(500, 380))],
-        #       weapons=[Barrel((300, 400))]
-        #       ),
+        Stage(max_scroll_x=250,
+              #enemies=[EnemyScooterboy(pos=(200, 400))],
+              enemies=[EnemyPortal(pos=(600, 400), enemies=(EnemyVax, EnemyHoodie), spawn_interval=120, spawn_interval_change=30, start_timer=300)],
+              #enemies=[EnemyScooterboy(pos=(200, 400)),EnemyScooterboy(pos=(100, 300)),EnemyScooterboy(pos=(300, 600)),EnemyScooterboy(pos=(200, 500)),],
+              #enemies=[EnemyBoss(pos=(500, 380))],
+              weapons=[Barrel((300, 400))]
+              ),
 
         Stage(max_scroll_x=300,
               enemies=[EnemyScooterboy(pos=(1000, 400))],
