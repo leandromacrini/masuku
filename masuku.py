@@ -154,9 +154,9 @@ try:
     # cause issues with delayed or non-playing sounds on some devices
     mixer.quit()
     mixer.init(44100, -16, 2, 1024)
-
-    music.play("theme_jap")
     music.set_volume(0.3)
+
+    music.play("intro")
 except Exception:
     # If an error occurs (e.g. no sound hardware), ignore it
     pass

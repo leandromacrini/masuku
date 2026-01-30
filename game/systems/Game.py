@@ -3,7 +3,7 @@ from random import choice, randint
 from pygame import Vector2, Rect
 import pygame
 
-from pgzero.builtins import images, sounds
+from pgzero.builtins import images, sounds, music
 
 from game.config import *
 from game.utils import Profiler, move_towards
@@ -78,9 +78,12 @@ class Game:
     def next_stage(self):
         # A stage is over when we've scrolled to its max_scroll_x and there are no enemies left
         # Enemies are created when we start scrolling (or here, if no scrolling is to take place or is already taking place)
+        
         self.stage_index += 1
         if self.stage_index < len(stage_setup.STAGES):
             stage = stage_setup.STAGES[self.stage_index]
+            if stage.music_track is not None:
+                music.play(stage.music_track)
             self.max_scroll_offset_x = stage.max_scroll_x
             weather = runtime.get_weather()
             if weather is not None:
