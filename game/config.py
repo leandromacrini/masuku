@@ -94,4 +94,5 @@ SPRITE_DIRS = {
     "scooterboy": "characters/scooterboy",
     "boss": "characters/boss",
     "portal": "characters/portal",
+    "kasaobake": "characters/kasaobake",
 }

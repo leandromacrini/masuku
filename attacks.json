@@ -400,7 +400,46 @@
    4
   ]
  },
- "boss_grab_player": {
+ "kasaobake_special": {
+  "sprite": "special",
+  "strength": 10,
+  "anim_time": 30,
+  "frame_time": 9,
+  "frames": 2,
+  "hit_frames": [
+   1
+  ]
+},
+  "kasaobake_lattack": {
+  "sprite": "lattack",
+  "strength": 6,
+  "anim_time": 18,
+  "frame_time": 9,
+  "frames": 2,
+  "hit_frames": [
+   1
+  ]
+},
+  "kasaobake_rattack": {
+  "sprite": "rattack",
+  "strength": 6,
+  "anim_time": 18,
+  "frame_time": 9,
+  "frames": 2,
+  "hit_frames": [
+   1
+  ],
+  "recovery_time": 100,
+  "initial_sound": [
+   "sfx/attacks/kick_whoosh",
+   4
+  ],
+  "hit_sound": [
+   "sfx/attacks/kick_hit",
+   4
+  ]
+ },
+"boss_grab_player": {
   "sprite": "throw_player",
   "strength": 4,
   "anim_time": 63,
