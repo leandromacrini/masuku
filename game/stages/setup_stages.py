@@ -4,6 +4,7 @@ from game.entities.EnemyHoodie import EnemyHoodie
 from game.entities.EnemyPortal import EnemyPortal
 from game.entities.EnemyScooterboy import EnemyScooterboy
 from game.entities.EnemyVax import EnemyVax
+from game.entities.EnemyKasaobake import EnemyKasaobake
 from game.entities.ExtraLifePowerup import ExtraLifePowerup
 from game.entities.HealthPowerup import HealthPowerup
 from game.entities.Barrel import Barrel
@@ -18,7 +19,7 @@ def setup_stages():
         Stage(max_scroll_x=0, enemies=[]),
 
         Stage(max_scroll_x=300,
-              enemies=[EnemyScooterboy(pos=(1000, 400))],
+              enemies=[EnemyKasaobake(pos=(1000, 400))],
               #weapons=[Barrel((300, 400))],
               #powerups=[HealthPowerup(pos=(1100, MIN_WALK_Y)), ExtraLifePowerup(pos=(1000, MIN_WALK_Y))]
               ),

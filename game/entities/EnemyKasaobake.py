@@ -10,7 +10,7 @@ import game.runtime as runtime
 
 class EnemyKasaobake(Enemy):
     def __init__(self, pos, start_timer=20):
-        super().__init__(pos, "kasaobake", ("kasaobake_attack"),
+        super().__init__(pos, "kasaobake", ("kasaobake_lattack", "kasaobake_rattack", "kasaobake_special"),
                          speed=Vector2(0.5,0.5), health=100, stamina=1000, start_timer=start_timer,
                          score=100)
     
