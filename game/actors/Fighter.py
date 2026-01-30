@@ -380,7 +380,7 @@ class Fighter(ScrollHeightActor, ABC):
 
     def draw(self, offset):
         # Determine sprite to use based on our current action
-        z = self.determine_sprite()
+        self.image = self.determine_sprite()
 
         super().draw(offset)
 
