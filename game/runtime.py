@@ -1,8 +1,10 @@
+from game.systems.Weather import WeatherSystem
+
 # Global runtime references shared across modules.
 
 game = None
 screen = None
-weather = None
+weather = WeatherSystem()
 
 debug_drawcalls = []
 

@@ -16,13 +16,11 @@ STAGES = ()
 def setup_stages():
     global STAGES
     STAGES = (
-        Stage(max_scroll_x=0, enemies=[], weather={"type": "none"}),
+        Stage(max_scroll_x=200, enemies=[], weather={"type": "none"}),
 
         Stage(max_scroll_x=300,
               enemies=[EnemyKasaobake(pos=(1000, 400))],
-              weather={"type": "rain", "intensity": 140, "wind": 0.0, "speed": 1.0, "length": 1.0, "ramp_seconds": 2.0},
-              #weapons=[Barrel((300, 400))],
-              #powerups=[HealthPowerup(pos=(1100, MIN_WALK_Y)), ExtraLifePowerup(pos=(1000, MIN_WALK_Y))]
+              weather={"type": "leaves", "intensity": 70, "wind": 0.0, "speed": 0.3, "length": 1.0, "ramp_seconds": 2.0},
               ),
 
         Stage(max_scroll_x=400, enemies=[], weather={"type": "none"}),

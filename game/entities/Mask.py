@@ -1,17 +1,16 @@
-from abc import abstractmethod
-
 from game.config import *
-from game.actors.ScrollHeightActor import ScrollHeightActor
+from game.entities.Powerup import Powerup
+import game.runtime as runtime
 
 
-class Mask(ScrollHeightActor):
-    def __init__(self, image, pos):
-        super().__init__(pos, image)
-        self.collected = False
+class Mask(Powerup):
+    def __init__(self, pos):
+        super().__init__(pos, f"{ITEMS_DIR}/health_pickup")
 
-    def update(self):
-        pass
-
-    @abstractmethod
     def collect(self, collector):
-        self.collected = True
+        super().collect(collector)
+
+        # Add 20 health to the player who collected us, but don't go over their max health
+        collector.health = min(collector.health + 20, collector.start_health)
+
+        runtime.game.play_sound("sfx/ui/health", 1)
