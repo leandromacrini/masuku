@@ -14,8 +14,6 @@
 import pgzero
 import pgzrun
 import pygame
-import builtins
-import os
 import sys
 from pygame import mixer
 from pgzero.builtins import images, music

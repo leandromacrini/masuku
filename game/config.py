@@ -49,7 +49,7 @@ SPECIAL_FONT_SYMBOLS_INVERSE = {v: k for k, v in SPECIAL_FONT_SYMBOLS.items()}
 
 WIDTH = 800
 HEIGHT = 480
-TITLE = "Beat Streets"
+TITLE = "Masuku no Monogatari"
 
 MIN_WALK_Y = 310
 
