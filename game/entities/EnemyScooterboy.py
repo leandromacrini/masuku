@@ -22,6 +22,7 @@ class EnemyScooterboy(Enemy):
         self.scooter_speed = EnemyScooterboy.SCOOTER_SPEED_SLOW
         self.scooter_target_speed = self.scooter_speed
         self.scooter_sound_channel = None
+        self.stand_frames = 1
 
     def spawned(self):
         super().spawned()

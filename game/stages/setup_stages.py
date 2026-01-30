@@ -16,20 +16,13 @@ STAGES = ()
 def setup_stages():
     global STAGES
     STAGES = (
-        Stage(max_scroll_x=200, enemies=[], weather={"type": "none"}),
-
-        BossStage(max_scroll_x=300,
-                  boss=EnemyKasaobake(pos=(1000, 400)),
-                  weather={"type": "rain", "intensity": 140, "wind": 0.0, "speed": 1.0, "length": 1.0, "ramp_seconds": 2.0},
-                  ),
-
-        Stage(max_scroll_x=400, enemies=[], weather={"type": "none"}),
+        Stage(max_scroll_x=0, enemies=[], weather={"type": "none"}),
       
-
-        Stage(max_scroll_x=600,
+        Stage(max_scroll_x=400,
               enemies=[EnemyVax(pos=(1400, 400)),
                        EnemyHoodie(pos=(1500, 500))],
-              weapons=[Barrel((1600, 400))]),
+              weapons=[Barrel((1600, 400))],
+              weather={"type": "snow", "intensity": 140, "wind": 0.0, "speed": 1.0, "length": 1.0, "ramp_seconds": 2.0}),
 
         Stage(max_scroll_x=600,
               enemies=[EnemyScooterboy(pos=(200, 400))]),
@@ -37,6 +30,13 @@ def setup_stages():
         Stage(max_scroll_x=900,
               enemies=[EnemyBoss(pos=(1800, 400)),
                        EnemyVax(pos=(400, 400))]),
+
+        BossStage(max_scroll_x=1000,
+              boss=EnemyKasaobake(pos=(1100, 400)),
+              weather={"type": "rain", "intensity": 140, "wind": 0.0, "speed": 1.0, "length": 1.0, "ramp_seconds": 2.0},
+            ),
+
+        Stage(max_scroll_x=1200, enemies=[], weather={"type": "none"}),
 
         Stage(max_scroll_x=1400,
               enemies=[EnemyHoodie(pos=(2100, 380)),
