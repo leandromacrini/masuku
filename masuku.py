@@ -103,12 +103,21 @@ def update_controls():
 # Pygame Zero calls the update and draw functions each frame
 
 def update():
-    global state, game, total_frames, screen, last_state_weather
+    global state, game, total_frames, screen, last_state_weather, last_state_music
 
     total_frames += 1
 
     update_controls()
     weather = runtime.get_weather()
+
+    if state != last_state_music:
+        if state == State.GAME_OVER:
+            music.play("gameover")
+        elif state == State.CREDITS:
+            music.play("credits")
+        elif state == State.TITLE:
+            music.play("intro")
+        last_state_music = state
 
     def button_pressed_controls(button_num):
         # Local function for detecting button 0 being pressed on either keyboard or controller, returns the controls
@@ -165,7 +174,7 @@ def update():
         if weather is not None:
             weather.update()
         if button_pressed_controls(0) is not None:
-            if(True or game.check_won()):
+            if(game.check_won()):
                 # Play credits if player won
                 state = State.CREDITS
                 game.credits_active = True
@@ -262,6 +271,7 @@ except Exception:
 
 total_frames = 0
 last_state_weather = None
+last_state_music = None
 
 # Set up controls
 keyboard_controls = KeyboardControls()

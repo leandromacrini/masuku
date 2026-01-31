@@ -12,7 +12,7 @@ from game.stages.Stage import Stage, BossStage
 
 STAGES = ()
 
-def setup_demo_stages():
+def setup_stages():
       global STAGES
       STAGES = (
             Stage(max_scroll_x=0, enemies=[], weather={"type": "none"}, music_track="theme_jap"),
@@ -28,7 +28,7 @@ def setup_demo_stages():
             )
       )     
 
-def setup_stages():
+def setup_stages2():
     global STAGES
     STAGES = (
         Stage(max_scroll_x=0, enemies=[], weather={"type": "none"}, music_track="theme_jap"),
