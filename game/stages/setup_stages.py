@@ -25,7 +25,7 @@ def setup_stages():
             BossStage(max_scroll_x=2400,
                   boss=EnemyYukiOnna(pos=(2800, 400)),
                   music_track="final_boss",
-                  weather="leaves",
+                  weather="snow",
             )
       )     
 
