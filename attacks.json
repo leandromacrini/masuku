@@ -384,7 +384,7 @@
  "boss_kick": {
   "sprite": "kick",
   "strength": 2,
-  "anim_time": 18,
+  "anim_time": 27,
   "frame_time": 9,
   "frames": 2,
   "hit_frames": [
@@ -400,34 +400,33 @@
    4
   ]
  },
- "kasaobake_special": {
-  "sprite": "special",
-  "strength": 10,
-  "anim_time": 30,
+ "kasaobake_kick": {
+  "sprite": "kick",
+  "strength": 2,
+  "anim_time": 27,
   "frame_time": 9,
-  "frames": 2,
+  "frames": 3,
   "hit_frames": [
-   1
+   2
+  ],
+  "recovery_time": 50,
+  "initial_sound": [
+   "sfx/attacks/kick_whoosh",
+   4
+  ],
+  "hit_sound": [
+   "sfx/attacks/kick_hit",
+   4
   ]
-},
-  "kasaobake_lattack": {
-  "sprite": "lattack",
+ },
+  "kasaobake_attack": {
+  "sprite": "attack",
   "strength": 6,
-  "anim_time": 18,
+  "anim_time": 27,
   "frame_time": 9,
-  "frames": 2,
+  "frames": 3,
   "hit_frames": [
-   1
-  ]
-},
-  "kasaobake_rattack": {
-  "sprite": "rattack",
-  "strength": 6,
-  "anim_time": 18,
-  "frame_time": 9,
-  "frames": 2,
-  "hit_frames": [
-   1
+   2
   ],
   "recovery_time": 100,
   "initial_sound": [

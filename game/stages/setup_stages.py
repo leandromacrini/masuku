@@ -20,6 +20,12 @@ def setup_stages():
 
         Stage(max_scroll_x=1400,
               enemies=[EnemyHoodie(pos=(2100, 380))]
-              )
+              ),
+
+        BossStage(max_scroll_x=2400,
+              boss=EnemyKasaobake(pos=(2800, 400)),
+              music_track="final_boss",
+              weather={"type": "rain", "intensity": 180, "wind": 0.0, "speed": 1.0, "length": 1.0, "ramp_seconds": 4.0},
+            )              
 
     )
