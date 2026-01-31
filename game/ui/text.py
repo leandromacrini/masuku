@@ -11,6 +11,7 @@ from game import config
 
 font_mikachan_big = pygame.font.Font("fonts/mikachan-PB.otf", 50)
 font_mikachan = pygame.font.Font("fonts/mikachan-PB.otf", 20)
+font_credits_big = pygame.font.Font("fonts/RiiT_F.otf", 40)
 font_credits = pygame.font.Font("fonts/RiiT_F.otf", 20)
 
 def get_char_image_and_width(char):
@@ -61,20 +62,19 @@ def draw_text_scaled(screen, text, X, Y, scale = 1):
                 screen.blit(scaled_image, (X, Y))
             X += width * scale
 
-def draw_text(screen, text, x, y, centre=False):
-    # Note that the centre option does not work correctly for text with line breaks
+
+def draw_text(screen, text, x, y, centre=False, font=font_credits_big, color=(255, 255, 255), italic=False, bold=False, underline=False):
+    # Uses TrueType font rendering (same base logic as draw_text_otf).
+    font.set_italic(italic)
+    font.set_bold(bold)
+    font.set_underline(underline)
+
+    lines = text.splitlines() if text else [""]
+    line_height = font.size("A")[1] + 4
     if centre:
-        x -= text_width(text) // 2
+        max_width = max(font.size(line)[0] for line in lines)
+        x -= max_width // 2
 
-    start_x = x
-
-    for char in text:
-        if char == "\n":
-            # New line
-            y += 35
-            x = start_x
-        else:
-            image, width = get_char_image_and_width(char)
-            if image is not None:
-                screen.blit(image, (x, y))
-            x += width
+    for i, line in enumerate(lines):
+        surf = font.render(line, True, color)
+        screen.blit(surf, (x, y + i * line_height))

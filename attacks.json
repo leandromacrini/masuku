@@ -437,6 +437,25 @@
    "sfx/attacks/kick_hit",
    4
   ]
+}, 
+"onna_fight": {
+  "sprite": "fight",
+  "strength": 6,
+  "anim_time": 27,
+  "frame_time": 9,
+  "frames": 3,
+  "hit_frames": [
+   2
+  ],
+  "recovery_time": 100,
+  "initial_sound": [
+   "sfx/attacks/kick_whoosh",
+   4
+  ],
+  "hit_sound": [
+   "sfx/attacks/kick_hit",
+   4
+  ]
  },
 "boss_grab_player": {
   "sprite": "throw_player",

@@ -5,6 +5,7 @@ from game.entities.EnemyPortal import EnemyPortal
 from game.entities.EnemyScooterboy import EnemyScooterboy
 from game.entities.EnemyVax import EnemyVax
 from game.entities.EnemyKasaobake import EnemyKasaobake
+from game.entities.EnemyYukiOnna import  EnemyYukiOnna
 from game.entities.ExtraLifePowerup import ExtraLifePowerup
 from game.entities.HealthPowerup import HealthPowerup
 from game.entities.Barrel import Barrel
@@ -22,7 +23,7 @@ def setup_stages():
             ),
 
             BossStage(max_scroll_x=2400,
-                  boss=EnemyKasaobake(pos=(2800, 400)),
+                  boss=EnemyYukiOnna(pos=(2800, 400)),
                   music_track="final_boss",
                   weather={"type": "rain", "intensity": 180, "wind": 0.0, "speed": 1.0, "length": 1.0, "ramp_seconds": 4.0},
             )

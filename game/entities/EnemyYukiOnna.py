@@ -10,11 +10,11 @@ import game.runtime as runtime
 
 class EnemyYukiOnna(Enemy):
     def __init__(self, pos, start_timer=20):
-        super().__init__(pos, "yuki", ("yuki_lattack", "yuki_rattack", "yuki_special"),
-                         speed=Vector2(0.5, 0.5), health=10, stamina=1000, start_timer=start_timer,
-                         score=100, enemy_type=Enemy.EnemyType.MID_BOSS)
+        super().__init__(pos, "onna", ("onna_fight"),
+                         speed=Vector2(0.5, 0.5), health=50, stamina=500, start_timer=start_timer,
+                         score=200, enemy_type=Enemy.EnemyType.MID_BOSS)
         self.title_name = "雪女 (Yuki-onna)"
-        self.boss_intro_image = "yuki_boss_intro"
+        self.boss_intro_image = "onna_boss_intro"
 
     def died(self):
         super().died()
