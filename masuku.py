@@ -134,7 +134,7 @@ def update():
 
     if state == State.TITLE:
         if weather is not None and last_state_weather != "title":
-            weather.set_weather("rain")
+            weather.set_weather("snow")
             last_state_weather = "title"
         if weather is not None:
             weather.update()
