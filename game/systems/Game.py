@@ -40,29 +40,21 @@ class Game:
 
         stage_setup.setup_stages()
 
-        # Set up intro text, selecting randomly from one of several stolen items
-        stolen_items = ("A SHIPMENT OF RASPBERRY\nPIS",
-                        "YOUR COPY OF CODE THE\nCLASSICS VOL 2",
-                        "THE COMPLETE WORKS OF\nSHAKESPEARE",
-                        "THE BLOCKCHAIN",
-                        "THE WORLD'S ENTIRE SUPPLY\nOF COVID VACCINES",
-                        "ALL OF YOUR SAVED GAME\nFILES",
-                        "YOUR DOG'S FLEA MEDICINE")
-
         self.text_active = INTRO_ENABLED
-        self.intro_text = "THE NOTORIOUS CRIME BOSS\nEBEN UPTON HAS STOLEN\n" \
-                          + choice(stolen_items) \
-                          + "\n\n\nFIGHT TO RECLAIM WHAT\nHAS BEEN TAKEN!"
-        self.outro_text = "FOLLOWING THE DEFEAT OF\n" \
-                          + "THE EVIL GANG, HUMANITY\n" \
-                          + "ENTERED A NEW GOLDEN AGE\n" \
-                          + "IN WHICH CRIME BECAME A\n" \
-                          + "THING OF THE PAST. THE\n" \
-                          + "WORD ITSELF WAS SOON\n" \
-                          + "FORGOTTEN AND EVERYONE\n" \
-                          + "HAD A BIG PARTY IN YOUR\n" \
-                          + "HONOUR.\n" \
-                          + "\nNICE JOB!"
+        self.intro_text = "\nI took me ages to build this mask.\n" \
+                        + "There are no pencils in the demons\nworld.\n" \
+                        + "There is no paper, only hunger,\nhate and rage. \n" \
+                        + "But I collected some pieces there\n" \
+                        + "some pieces here and i managed\nto draw this face of a human. \n" \
+                        + "Now finally I can walk among them."
+
+        self.outro_text = "\nI defeated all this other demons \n" \
+                        + "and it turns out they were\nall humans. \n" \
+                        + "I'm a monster that wanted to be\n" \
+                        + "a human and humans are monsters\n" \
+                        + "that are afraid to be human. \n" \
+                        + "\n\t\t\t\t\t\t\tMaybe none of both\n\t\t\t\t\t\thas seen the light yet."
+
         self.current_text = self.intro_text
         self.displayed_text = ""
 
@@ -308,7 +300,7 @@ class Game:
 
         # Show intro text
         if self.text_active:
-            draw_text(screen, self.displayed_text, 50, 50)
+            draw_text(screen, self.displayed_text, 50, 0)
 
         if self.boss_intro_active and self.boss_intro_phase == "title":
             self.draw_boss_intro(screen)
