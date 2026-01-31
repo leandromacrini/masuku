@@ -65,29 +65,42 @@ class Game:
         self.credits_items = [
             {"type": "center", "text": ""},
             {"type": "center", "text": "THANK YOU FOR PLAYING"},
-            {"type": "center", "text": "STUDIO", "header": "True"},
-            {"type": "center", "text": "Drink Team"},
+
+            {"type": "center", "image": "credits/drinkteam"},
+
             {"type": "center", "text": "Developers", "header": "True"},
             {"type": "center", "text": "Leandro 'Sir_Leon' Macrini"},
             {"type": "center", "text": "xander8x"},
+
             {"type": "center", "text": "Artist Team", "header": "True"},
             {"type": "center", "text": "Paolo Tomeo"},
             {"type": "center", "text": "crimson2000"},
             {"type": "center", "text": "Alessia Di Vittorio"},
             {"type": "center", "text": "drowsiness"},
+
             {"type": "center", "text": "Sound Team", "header": "True"},
             {"type": "center", "text": "drowsiness"},
 
+            {"type": "center", "text": "Assets", "header": "True"},
+            {"type": "center", "text": "Code and graphics created with the help of OpenAI, Gemini"},
+
             {"type": "center", "text": "YOKAI",  "header": "True"},
-            {"type": "side", "side": "right", "image": "credits/inari", "text": "稲荷 (Inari)\nInari is a kami associated with rice,\nabundance, and prosperity.Inari is often\naccompanied by sacred foxes,known as\nkitsune, who act as messengers."},
-            {"type": "center", "text": ""},
-            {"type": "side", "side": "left", "image": "credits/tanuki", "text": "狸 (Tanuki)\nThe Tanuki is a yokai inspired by the\nJapanese raccoon dog, known for its playful and\nmischievous nature.\nIt is a skilled shapeshifter, able to transform\ninto people or objects to trick humans.\nIt loves sake, celebrations, and harmless pranks\nmore than true malice."},
             {"type": "center", "text": ""},
             {"type": "side", "side": "right", "image": "credits/kasaobake", "text": "傘おばけ (Kasa-obake)\nKasaobake is a tsukumogami,an object that\ncomes to life after many years\nof existence.\nIt originates from an old, forgotten umbrella.\nIt has a single eye, a long tongue,\nand only one leg.\nIt represents the playful spirit of\nabandoned objects."},
             {"type": "center", "text": ""},
-            {"type": "side", "side": "left", "image": "credits/yukionna","text": "雪女 (Yukionna)\nYuki-onna is the female spirit of snow,\nboth beautiful and unsettling.\nShe appears on winter nights during snowstorms.\nShe can freeze her victims with her breath\nor cause them to lose their way in the blizzard."},
+            {"type": "side", "side": "left", "image": "credits/tanuki","text": "狸 (Tanuki)\nThe Tanuki is a yokai inspired by the\nJapanese raccoon dog, known for its playful and\nmischievous nature.\nIt is a skilled shapeshifter, able to transform\ninto people or objects to trick humans.\nIt loves sake, celebrations, and harmless pranks\nmore than true malice."},
             {"type": "center", "text": ""},
-            {"type": "side", "side": "right", "image": "credits/tengu","text": "天狗 (Tengu)\nTengu are mountain yōkai\nwith an appearance\nthat is half human and half bird.\nThey are masters of martial arts and\nswordsmanship,\nextremely skilled and powerful.\nProud and severe, they punish arrogance\nand vanity."},
+            {"type": "side", "side": "right", "image": "credits/yukionna", "text": "雪女 (Yukionna)\nYuki-onna is the female spirit of snow,\nboth beautiful and unsettling.\nShe appears on winter nights during\nsnowstorms. She can freeze her victims\nwith her breath or cause them to lose\ntheir way in the blizzard."},
+            {"type": "center", "text": ""},
+            {"type": "side", "side": "left", "image": "credits/tengu","text": "天狗 (Tengu)\nTengu are mountain yōkai\nwith an appearance\nthat is half human and half bird.\nThey are masters of martial arts and\nswordsmanship,\nextremely skilled and powerful.\nProud and severe, they punish arrogance\nand vanity."},
+            {"type": "center", "text": ""},
+            {"type": "side", "side": "right", "image": "credits/inari", "text": "稲荷 (Inari)\nInari is a kami associated with rice,\nabundance, and prosperity.Inari is often\naccompanied by sacred foxes,known as\nkitsune, who act as messengers."},
+
+            {"type": "center", "text": ""},
+            {"type": "center", "text": "Thanks everyone!", "header":"True"},
+            {"type": "center", "text": "Thanks to"},
+            {"type": "center", "image": "credits/bolognanerd"},
+            {"type": "center", "text": "See you at next Global Game Jam!"},
         ]
         self.boss_intro_active = False
         self.boss_intro_phase = None
@@ -387,7 +400,7 @@ class Game:
             lines = text.splitlines() if text else []
             text_h = max(1, len(lines)) * line_height
             image_h = 0
-            if item.get("type") == "side" and item.get("image"):
+            if item.get("type") in ["side","center"] and item.get("image"):
                 try:
                     img = images.load(item["image"])
                     img = pygame.transform.scale(img, (img.get_width() * 0.3 , img.get_height() * 0.3))
@@ -415,11 +428,23 @@ class Game:
             line_height = entry["line_height"]
             if y > HEIGHT + 200 or y + entry["height"] < -200:
                 continue
-            if item.get("type") == "center":
+            if item.get("type") == "center" and item.get("image") is None:
                 lines = item.get("text", "").splitlines()
                 color = (255, 0, 0) if item.get("header") == "True" else (255, 255, 255)
                 for i, line in enumerate(lines):
                     draw_text_otf(screen, line, WIDTH // 2, y + i * line_height, font_credits, color,align="center")
+            elif item.get("type") == "center" and item.get("image") is not None:
+                img_name = item.get("image")
+                img = None
+                if img_name:
+                    try:
+                        img = images.load(item["image"])
+                        img = pygame.transform.smoothscale(img, (img.get_width() * 0.3, img.get_height() * 0.3))
+                    except Exception as ex:
+                        img = None
+                if img is not None:
+                    img_x = WIDTH // 2 - img.get_width() // 2
+                    screen.blit(img, (img_x, y))
             elif item.get("type") == "side":
                 side = item.get("side", "left")
                 text = item.get("text", "")
