@@ -1,4 +1,5 @@
 from game import config
+from game.entities.EnemyKappa import EnemyKappa
 from game.entities.EnemyBoss import EnemyBoss
 from game.entities.EnemyHoodie import EnemyHoodie
 from game.entities.EnemyPortal import EnemyPortal
@@ -19,7 +20,7 @@ def setup_stages():
             Stage(max_scroll_x=0, enemies=[], weather=None, music_track="theme_jap"),
 
             Stage(max_scroll_x=1400,
-                  enemies=[EnemyHoodie(pos=(2100, 380))]
+                  enemies=[EnemyKappa(pos=(2100, 380))]
             ),
 
             BossStage(max_scroll_x=2400,
