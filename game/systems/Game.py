@@ -378,6 +378,9 @@ class Game:
 
     def draw_credits(self, screen):
         screen.fill((0, 0, 0))
+        weather = runtime.get_weather()
+        if weather is not None:
+            weather.draw(screen)
         if not self.credits_layout:
             return
         for entry in self.credits_layout:

@@ -179,7 +179,7 @@ def update():
 
     elif state == State.CREDITS:
         if weather is not None and last_state_weather != "credits":
-            weather.set_weather(None)
+            weather.set_weather({"type": "snow", "intensity": 120, "wind": 0.1, "speed": 1.0, "length": 1.0, "ramp_seconds": 1.0})
             last_state_weather = "credits"
         if weather is not None:
             weather.update()
