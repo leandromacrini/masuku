@@ -41,7 +41,7 @@ class Game:
         stage_setup.setup_stages()
 
         self.text_active = INTRO_ENABLED
-        self.intro_text = "\nI took me ages to build this mask.\n" \
+        self.intro_text = "\nIt took me ages to build this mask.\n" \
                         + "There are no pencils in the demons\nworld.\n" \
                         + "There is no paper, only hunger,\nhate and rage. \n" \
                         + "But I collected some pieces there\n" \
