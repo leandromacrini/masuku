@@ -88,6 +88,7 @@ class Game:
         self.boss_intro_scroll_start_x = None
         self.boss_intro_boss_start_x = None
         self.boss_intro_boss_target_x = None
+        self.current_stage_weather = None
 
     def next_stage(self):
         # A stage is over when we've scrolled to its max_scroll_x and there are no enemies left
@@ -99,16 +100,11 @@ class Game:
             if stage.music_track is not None:
                 music.play(stage.music_track)
             self.max_scroll_offset_x = stage.max_scroll_x
-            weather = runtime.get_weather()
-            if weather is not None:
-                weather.set_weather(stage.weather)
+            self.current_stage_weather = stage.weather
             if self.scrolling or self.max_scroll_offset_x <= self.scroll_offset.x:
                 print("No scrolling or already scrolling - create stage objects")
                 self.create_stage_objects(stage)
         else:
-            weather = runtime.get_weather()
-            if weather is not None:
-                weather.stop()
             # If stage_index has reached len(STAGES), we go into the outro state (like intro text, but with different text)
             # After that, check_won() will return True and the game state code will pick up on this and end the game
             if not self.text_active:
@@ -151,10 +147,6 @@ class Game:
             p = Profiler()
 
         self.timer += 1
-        weather = runtime.get_weather()
-        if weather is not None:
-            weather.update()
-        
         if self.credits_active:
             self.update_credits()
             return
@@ -277,9 +269,6 @@ class Game:
             print("objs: {0}".format(p.get_ms()))
 
         p = Profiler()
-        weather = runtime.get_weather()
-        if weather is not None:
-            weather.draw(screen)
 
         # If player can scroll the level, show flashing arrow
         if self.scroll_offset.x < self.max_scroll_offset_x and (self.timer // 30) % 2 == 0:

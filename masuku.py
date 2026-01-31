@@ -103,11 +103,12 @@ def update_controls():
 # Pygame Zero calls the update and draw functions each frame
 
 def update():
-    global state, game, total_frames, screen
+    global state, game, total_frames, screen, last_state_weather
 
     total_frames += 1
 
     update_controls()
+    weather = runtime.get_weather()
 
     def button_pressed_controls(button_num):
         # Local function for detecting button 0 being pressed on either keyboard or controller, returns the controls
@@ -121,11 +122,21 @@ def update():
         return None
 
     if state == State.TITLE:
+        if weather is not None and last_state_weather != "title":
+            weather.set_weather({"type": "snow", "intensity": 120, "wind": 0.1, "speed": 1.0, "length": 1.0, "ramp_seconds": 1.0})
+            last_state_weather = "title"
+        if weather is not None:
+            weather.update()
         # Check for start game
         if button_pressed_controls(0) is not None:
             state = State.CONTROLS
 
     elif state == State.CONTROLS:
+        if weather is not None and last_state_weather != "controls":
+            weather.set_weather(None)
+            last_state_weather = "controls"
+        if weather is not None:
+            weather.update()
         # Check for player starting game with either keyboard or controller
         controls = button_pressed_controls(0)
         if controls is not None:
@@ -135,6 +146,9 @@ def update():
             runtime.set_game(game)
 
     elif state == State.PLAY:
+        if weather is not None and last_state_weather != "play":
+            weather.set_weather(None)
+            last_state_weather = "play"
         game.update()
         if game.player.lives <= 0 or game.check_won():
             # Need to call game.shutdown to turn off scooter engine sound
@@ -142,6 +156,14 @@ def update():
             state = State.GAME_OVER
 
     elif state == State.GAME_OVER:
+        if weather is not None and last_state_weather != "game_over":
+            if game.check_won():
+                weather.set_weather({"type": "snow", "intensity": 120, "wind": 0.1, "speed": 1.0, "length": 1.0, "ramp_seconds": 1.0})
+            else:
+                weather.set_weather({"type": "rain", "intensity": 140, "wind": 0.0, "speed": 1.0, "length": 1.0, "ramp_seconds": 1.0})
+            last_state_weather = "game_over"
+        if weather is not None:
+            weather.update()
         if button_pressed_controls(0) is not None:
             if(True or game.check_won()):
                 # Play credits if player won
@@ -156,6 +178,11 @@ def update():
                 state = State.TITLE
 
     elif state == State.CREDITS:
+        if weather is not None and last_state_weather != "credits":
+            weather.set_weather(None)
+            last_state_weather = "credits"
+        if weather is not None:
+            weather.update()
         game.update()
         if button_pressed_controls(0) is not None:
             game.text_active = False
@@ -171,6 +198,7 @@ def on_key_down(key):
 
 def draw():
     global screen
+    weather = runtime.get_weather()
 
     real_surface = screen.surface
     real_game_surface = pgzgame.screen
@@ -183,6 +211,8 @@ def draw():
         screen.blit(logo_img, (LOGICAL_WIDTH // 2 - logo_img.get_width() // 2, LOGICAL_HEIGHT // 2 - logo_img.get_height() // 2))
 
         draw_text(screen, f"PRESS {config.SPECIAL_FONT_SYMBOLS['xb_a']} OR Z", LOGICAL_WIDTH // 2, LOGICAL_HEIGHT - 50, True)
+        if weather is not None:
+            weather.draw(screen)
 
     elif state == State.CONTROLS:
         screen.fill((0, 0, 0))
@@ -199,6 +229,8 @@ def draw():
         else:
             img = images.load("ui/status_lose")
         screen.blit(img, (LOGICAL_WIDTH // 2 - img.get_width() // 2, LOGICAL_HEIGHT // 2 - img.get_height() // 2))
+        if weather is not None:
+            weather.draw(screen)
     elif state == State.CREDITS:
         game.draw(screen)
 
@@ -229,6 +261,7 @@ except Exception:
 
 
 total_frames = 0
+last_state_weather = None
 
 # Set up controls
 keyboard_controls = KeyboardControls()
