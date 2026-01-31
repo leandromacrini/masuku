@@ -11,6 +11,7 @@ from game import config
 
 font_mikachan_big = pygame.font.Font("fonts/mikachan-PB.otf", 50)
 font_mikachan = pygame.font.Font("fonts/mikachan-PB.otf", 20)
+font_credits = pygame.font.Font("fonts/RiiT_F.otf", 20)
 
 def get_char_image_and_width(char):
     # Return width of given character. ord() gives the ASCII/Unicode code for the given character.
@@ -36,11 +37,13 @@ def get_char_image_width_and_height(char):
 def text_width(text):
     return sum([get_char_image_and_width(c)[1] for c in text])
 
-def draw_text_otf(screen, text, x, y, font=font_mikachan, color= (0,0,0), italic=False, bold=False, underline=False):
+def draw_text_otf(screen, text, x, y, font=font_mikachan, color= (0,0,0), italic=False, bold=False, underline=False, align="left"):
     font.set_italic(italic)
     font.set_bold(bold)
     font.set_underline(underline)
     surf = font.render(text, True, color )
+    if align == "center":
+        x = x - surf.get_width() // 2
     screen.blit(surf, (x, y))
 
 def draw_text_scaled(screen, text, X, Y, scale = 1):
