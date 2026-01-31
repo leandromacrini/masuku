@@ -400,9 +400,9 @@ class WeatherSystem:
         self.effect = None
         self.active_kind = None
         self.presets = {
-            "rain": {"intensity": 140, "wind": 0.0, "speed": 1.0, "length": 1.0, "ramp_seconds": 5},
-            "snow": {"intensity": 120, "wind": 0.1, "speed": 0.5, "length": 1.0, "ramp_seconds": 5},
-            "leaves": {"intensity": 50, "wind": 0, "speed": 0.25, "length": 1.0, "ramp_seconds": 5},
+            "rain": {"intensity": 140, "wind": 0.0, "speed": 1.0, "length": 1.0, "ramp_seconds": 2.5},
+            "snow": {"intensity": 120, "wind": 0.1, "speed": 0.5, "length": 1.0, "ramp_seconds": 2.5},
+            "leaves": {"intensity": 50, "wind": 0, "speed": 0.25, "length": 1.0, "ramp_seconds": 2.5},
         }
         self.settings = self.presets["rain"].copy()
 
