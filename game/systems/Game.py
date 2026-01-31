@@ -8,7 +8,7 @@ from pgzero.builtins import images, sounds, music
 from game.config import *
 from game.utils import Profiler, move_towards
 import game.stages.setup_stages as stage_setup
-from game.ui.text import draw_text, draw_text_otf, font_mikachan, font_mikachan_big
+from game.ui.text import draw_text, draw_text_otf, font_mikachan, font_mikachan_big, font_credits
 import game.runtime as runtime
 from game.entities.Player import Player
 from game.stages.Stage import BossStage
@@ -41,7 +41,7 @@ class Game:
         stage_setup.setup_stages()
 
         self.text_active = INTRO_ENABLED
-        self.intro_text = "\nI took me ages to build this mask.\n" \
+        self.intro_text = "\nIt took me ages to build this mask.\n" \
                         + "There are no pencils in the demons\nworld.\n" \
                         + "There is no paper, only hunger,\nhate and rage. \n" \
                         + "But I collected some pieces there\n" \
@@ -63,11 +63,31 @@ class Game:
         self.credits_scroll_speed = 1.0
         self.credits_layout = []
         self.credits_items = [
-            {"type": "center", "text": "THANKS FOR PLAYING"},
-            {"type": "side", "side": "left", "image": "credits/team", "text": "CODE\nTEAM"},
-            {"type": "side", "side": "right", "image": "credits/art", "text": "ART\nTEAM"},
-            {"type": "center", "text": "SPECIAL THANKS"},
-            {"type": "side", "side": "left", "image": "credits/music", "text": "MUSIC\nSFX"},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": "THANK YOU FOR PLAYING"},
+            {"type": "center", "text": "STUDIO", "header": "True"},
+            {"type": "center", "text": "Drink Team"},
+            {"type": "center", "text": "Developers", "header": "True"},
+            {"type": "center", "text": "Leandro 'Sir_Leon' Macrini"},
+            {"type": "center", "text": "xander8x"},
+            {"type": "center", "text": "Artist Team", "header": "True"},
+            {"type": "center", "text": "Paolo Tomeo"},
+            {"type": "center", "text": "crimson2000"},
+            {"type": "center", "text": "Alessia Di Vittorio"},
+            {"type": "center", "text": "drowsiness"},
+            {"type": "center", "text": "Sound Team", "header": "True"},
+            {"type": "center", "text": "drowsiness"},
+
+            {"type": "center", "text": "YOKAI",  "header": "True"},
+            {"type": "side", "side": "right", "image": "credits/inari", "text": "稲荷 (Inari)\nInari is a kami associated with rice,\nabundance, and prosperity.Inari is often\naccompanied by sacred foxes,known as\nkitsune, who act as messengers."},
+            {"type": "center", "text": ""},
+            {"type": "side", "side": "left", "image": "credits/tanuki", "text": "狸 (Tanuki)\nThe Tanuki is a yokai inspired by the\nJapanese raccoon dog, known for its playful and\nmischievous nature.\nIt is a skilled shapeshifter, able to transform\ninto people or objects to trick humans.\nIt loves sake, celebrations, and harmless pranks\nmore than true malice."},
+            {"type": "center", "text": ""},
+            {"type": "side", "side": "right", "image": "credits/kasaobake", "text": "傘おばけ (Kasa-obake)\nKasaobake is a tsukumogami,an object that\ncomes to life after many years\nof existence.\nIt originates from an old, forgotten umbrella.\nIt has a single eye, a long tongue,\nand only one leg.\nIt represents the playful spirit of\nabandoned objects."},
+            {"type": "center", "text": ""},
+            {"type": "side", "side": "left", "image": "credits/yukionna","text": "雪女 (Yukionna)\nYuki-onna is the female spirit of snow,\nboth beautiful and unsettling.\nShe appears on winter nights during snowstorms.\nShe can freeze her victims with her breath\nor cause them to lose their way in the blizzard."},
+            {"type": "center", "text": ""},
+            {"type": "side", "side": "right", "image": "credits/tengu","text": "天狗 (Tengu)\nTengu are mountain yōkai\nwith an appearance\nthat is half human and half bird.\nThey are masters of martial arts and\nswordsmanship,\nextremely skilled and powerful.\nProud and severe, they punish arrogance\nand vanity."},
         ]
         self.boss_intro_active = False
         self.boss_intro_phase = None
@@ -359,7 +379,7 @@ class Game:
 
     def build_credits_layout(self):
         layout = []
-        line_height = font_mikachan.size("A")[1] + 4
+        line_height = font_credits.size("A")[1] + 4
         spacing = 40
         y = 0
         for item in self.credits_items:
@@ -370,8 +390,9 @@ class Game:
             if item.get("type") == "side" and item.get("image"):
                 try:
                     img = images.load(item["image"])
+                    img = pygame.transform.scale(img, (img.get_width() * 0.3 , img.get_height() * 0.3))
                     image_h = img.get_height()
-                except Exception:
+                except Exception as e:
                     image_h = 0
             height = max(text_h, image_h) + spacing
             layout.append({"item": item, "y": y, "height": height, "line_height": line_height})
@@ -396,8 +417,9 @@ class Game:
                 continue
             if item.get("type") == "center":
                 lines = item.get("text", "").splitlines()
+                color = (255, 0, 0) if item.get("header") == "True" else (255, 255, 255)
                 for i, line in enumerate(lines):
-                    draw_text_otf(screen, line, WIDTH // 2 - 200, y + i * line_height, font_mikachan_big, (255, 255, 255))
+                    draw_text_otf(screen, line, WIDTH // 2, y + i * line_height, font_credits, color,align="center")
             elif item.get("type") == "side":
                 side = item.get("side", "left")
                 text = item.get("text", "")
@@ -406,15 +428,17 @@ class Game:
                 img = None
                 if img_name:
                     try:
-                        img = images.load(img_name)
-                    except Exception:
+                        img = images.load(item["image"])
+                        img = pygame.transform.smoothscale(img, (img.get_width() * 0.3 , img.get_height() * 0.3))
+                    except Exception as ex:
                         img = None
                 if img is not None:
-                    img_x = 60 if side == "left" else WIDTH - img.get_width() - 60
+                    img_x = 0 if side == "left" else WIDTH - img.get_width() - 60
                     screen.blit(img, (img_x, y))
-                text_x = 260 if side == "left" else 60
+                text_x = WIDTH // 2 - 100 if side == "left" else 30
+
                 for i, line in enumerate(lines):
-                    draw_text_otf(screen, line, text_x, y + i * line_height, font_mikachan, (255, 255, 255))
+                    draw_text_otf(screen, line, text_x, y + i * line_height, font_credits, (255, 255, 255))
 
     def prepare_boss_intro(self, stage):
         self.boss_intro_active = True
