@@ -8,7 +8,7 @@ from game.entities.Mask import Mask
 import game.runtime as runtime
 
 
-class EnemyTengu(Enemy):
+class EnemyTanuki(Enemy):
     def __init__(self, pos, start_timer=20):
         super().__init__(pos, "tanuki", ("tanuki_lattack", "tanuki_rattack", "tanuki_special"),
                          speed=Vector2(0.5, 0.5), health=10, stamina=1000, start_timer=start_timer,
