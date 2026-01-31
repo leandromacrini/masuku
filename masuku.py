@@ -11,12 +11,16 @@
 # import ctypes
 # ctypes.windll.user32.SetProcessDPIAware()
 
+import os
+os.environ.setdefault("SDL_VIDEO_CENTERED", "1")
+
 import pgzero
+import pgzero.game as pgzgame
 import pgzrun
 import pygame
 import sys
 from pygame import mixer
-from pgzero.builtins import images, music
+from pgzero.builtins import images, music, keys
 
 from game import config
 from game.controls.KeyboardControls import KeyboardControls
@@ -42,10 +46,36 @@ if pgzero_version < [1, 2]:
     print(f"This game requires at least version 1.2 of Pygame Zero. You have version {pgzero.__version__}. Please upgrade using the command 'pip3 install --upgrade pgzero'")
     sys.exit()
 
-# Pygame Zero uses these module-level constants
-WIDTH = config.WIDTH
-HEIGHT = config.HEIGHT
+# Pygame Zero uses these module-level constants (window size)
+LOGICAL_WIDTH = config.WIDTH
+LOGICAL_HEIGHT = config.HEIGHT
+DISPLAY_WIDTH = getattr(config, "WINDOW_WIDTH", LOGICAL_WIDTH)
+DISPLAY_HEIGHT = getattr(config, "WINDOW_HEIGHT", LOGICAL_HEIGHT)
+WIDTH = DISPLAY_WIDTH
+HEIGHT = DISPLAY_HEIGHT
 TITLE = config.TITLE
+FULLSCREEN = False
+
+# Virtual surface for resolution-independent rendering
+VIRTUAL_SURFACE = pygame.Surface((LOGICAL_WIDTH, LOGICAL_HEIGHT))
+
+def apply_display_mode(fullscreen):
+    global DISPLAY_WIDTH, DISPLAY_HEIGHT, WIDTH, HEIGHT, FULLSCREEN
+    FULLSCREEN = fullscreen
+    if fullscreen:
+        info = pygame.display.Info()
+        DISPLAY_WIDTH, DISPLAY_HEIGHT = info.current_w, info.current_h
+        flags = pygame.FULLSCREEN
+    else:
+        DISPLAY_WIDTH = getattr(config, "WINDOW_WIDTH", LOGICAL_WIDTH)
+        DISPLAY_HEIGHT = getattr(config, "WINDOW_HEIGHT", LOGICAL_HEIGHT)
+        flags = 0
+    WIDTH = DISPLAY_WIDTH
+    HEIGHT = DISPLAY_HEIGHT
+    pgzgame.DISPLAY_FLAGS = flags
+    surface = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT), flags)
+    screen.surface = surface
+    pgzgame.screen = surface
 
 # Set up controls
 
@@ -119,15 +149,25 @@ def update():
             runtime.set_game(None)
 
 
+def on_key_down(key):
+    if key == keys.F11:
+        apply_display_mode(not FULLSCREEN)
+
+
 def draw():
     global screen
+
+    real_surface = screen.surface
+    real_game_surface = pgzgame.screen
+    screen.surface = VIRTUAL_SURFACE
+    pgzgame.screen = VIRTUAL_SURFACE
 
     if state == State.TITLE:
         # Draw logo
         logo_img = images.load("ui/title0") if total_frames // 20 % 2 == 0 else images.load("ui/title1")
-        screen.blit(logo_img, (WIDTH // 2 - logo_img.get_width() // 2, HEIGHT // 2 - logo_img.get_height() // 2))
+        screen.blit(logo_img, (LOGICAL_WIDTH // 2 - logo_img.get_width() // 2, LOGICAL_HEIGHT // 2 - logo_img.get_height() // 2))
 
-        draw_text(screen, f"PRESS {config.SPECIAL_FONT_SYMBOLS['xb_a']} OR Z", WIDTH // 2, HEIGHT - 50, True)
+        draw_text(screen, f"PRESS {config.SPECIAL_FONT_SYMBOLS['xb_a']} OR Z", LOGICAL_WIDTH // 2, LOGICAL_HEIGHT - 50, True)
 
     elif state == State.CONTROLS:
         screen.fill((0, 0, 0))
@@ -143,7 +183,16 @@ def draw():
             img = images.load("ui/status_win")
         else:
             img = images.load("ui/status_lose")
-        screen.blit(img, (WIDTH // 2 - img.get_width() // 2, HEIGHT // 2 - img.get_height() // 2))
+        screen.blit(img, (LOGICAL_WIDTH // 2 - img.get_width() // 2, LOGICAL_HEIGHT // 2 - img.get_height() // 2))
+
+    pgzgame.screen = real_game_surface
+    screen.surface = real_surface
+    scale = min(DISPLAY_WIDTH / LOGICAL_WIDTH, DISPLAY_HEIGHT / LOGICAL_HEIGHT)
+    scaled_w = int(LOGICAL_WIDTH * scale)
+    scaled_h = int(LOGICAL_HEIGHT * scale)
+    scaled = pygame.transform.smoothscale(VIRTUAL_SURFACE, (scaled_w, scaled_h))
+    real_surface.fill((0, 0, 0))
+    real_surface.blit(scaled, ((DISPLAY_WIDTH - scaled_w) // 2, (DISPLAY_HEIGHT - scaled_h) // 2))
 
 
 ##############################################################################
