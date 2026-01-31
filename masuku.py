@@ -12,6 +12,8 @@
 # ctypes.windll.user32.SetProcessDPIAware()
 
 import os
+
+from game.ui import text
 os.environ.setdefault("SDL_VIDEO_CENTERED", "1")
 
 import pgzero
@@ -27,7 +29,7 @@ from game.controls.KeyboardControls import KeyboardControls
 from game.controls.JoystickControls import JoystickControls
 from game.systems.Game import Game
 from game.systems.State import State
-from game.ui.text import draw_text
+from game.ui.text import draw_text, draw_text_otf
 import game.runtime as runtime
 
 # Check Python version number. sys.version_info gives version as a tuple, e.g. if (3,7,2,'final',0) for version 3.7.2.
@@ -132,7 +134,7 @@ def update():
 
     if state == State.TITLE:
         if weather is not None and last_state_weather != "title":
-            weather.set_weather({"type": "snow", "intensity": 120, "wind": 0.1, "speed": 1.0, "length": 1.0, "ramp_seconds": 1.0})
+            weather.set_weather("rain")
             last_state_weather = "title"
         if weather is not None:
             weather.update()
@@ -167,9 +169,9 @@ def update():
     elif state == State.GAME_OVER:
         if weather is not None and last_state_weather != "game_over":
             if game.check_won():
-                weather.set_weather({"type": "snow", "intensity": 120, "wind": 0.1, "speed": 1.0, "length": 1.0, "ramp_seconds": 1.0})
+                weather.set_weather("snow")
             else:
-                weather.set_weather({"type": "rain", "intensity": 140, "wind": 0.0, "speed": 1.0, "length": 1.0, "ramp_seconds": 1.0})
+                weather.set_weather("rain")
             last_state_weather = "game_over"
         if weather is not None:
             weather.update()
@@ -188,7 +190,7 @@ def update():
 
     elif state == State.CREDITS:
         if weather is not None and last_state_weather != "credits":
-            weather.set_weather({"type": "snow", "intensity": 120, "wind": 0.1, "speed": 1.0, "length": 1.0, "ramp_seconds": 1.0})
+            weather.set_weather("snow")
             last_state_weather = "credits"
         if weather is not None:
             weather.update()
@@ -219,7 +221,8 @@ def draw():
         logo_img = images.load("ui/title0") if total_frames // 20 % 2 == 0 else images.load("ui/title1")
         screen.blit(logo_img, (LOGICAL_WIDTH // 2 - logo_img.get_width() // 2, LOGICAL_HEIGHT // 2 - logo_img.get_height() // 2))
 
-        draw_text(screen, f"PRESS {config.SPECIAL_FONT_SYMBOLS['xb_a']} OR Z", LOGICAL_WIDTH // 2, LOGICAL_HEIGHT - 50, True)
+        draw_text_otf(screen, f"PRESS START", LOGICAL_WIDTH // 2 +1, LOGICAL_HEIGHT - 50 +1, font=text.font_credits_big, color=config.BOSS_COLOR_SHADOW, align="center")
+        draw_text_otf(screen, f"PRESS START", LOGICAL_WIDTH // 2, LOGICAL_HEIGHT - 50, font=text.font_credits_big, color=config.BOSS_COLOR_RED, align="center")
         if weather is not None:
             weather.draw(screen)
 

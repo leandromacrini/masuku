@@ -16,7 +16,7 @@ STAGES = ()
 def setup_stages():
       global STAGES
       STAGES = (
-            Stage(max_scroll_x=0, enemies=[], weather={"type": "none"}, music_track="theme_jap"),
+            Stage(max_scroll_x=0, enemies=[], weather=None, music_track="theme_jap"),
 
             Stage(max_scroll_x=1400,
                   enemies=[EnemyHoodie(pos=(2100, 380))]
@@ -25,14 +25,14 @@ def setup_stages():
             BossStage(max_scroll_x=2400,
                   boss=EnemyYukiOnna(pos=(2800, 400)),
                   music_track="final_boss",
-                  weather={"type": "rain", "intensity": 180, "wind": 0.0, "speed": 1.0, "length": 1.0, "ramp_seconds": 4.0},
+                  weather="leaves",
             )
       )     
 
 def setup_stages2():
     global STAGES
     STAGES = (
-        Stage(max_scroll_x=0, enemies=[], weather={"type": "none"}, music_track="theme_jap"),
+        Stage(max_scroll_x=0, enemies=[], weather=None, music_track="theme_jap"),
 
         Stage(max_scroll_x=600,
               enemies=[EnemyVax(pos=(1400, 400)),

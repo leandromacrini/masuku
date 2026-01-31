@@ -82,7 +82,7 @@ class RainEffect:
     def draw(self, screen):
         if screen is None:
             return
-        color = (130, 180, 230)
+        color = (100, 100, 130)
         for x, y, _speed, length, _drift in self.drops:
             screen.draw.line((x, y), (x + 1, y + length), color)
 
@@ -236,9 +236,12 @@ class LeavesEffect:
         size = random.uniform(*self.size_range)
         drift = random.uniform(-0.6, 0.6) + self.wind
         wobble = random.uniform(0.8, 1.6)
-        angle = math.radians(45.0 * (1.0 + random.uniform(-0.1, 0.1)))
+        angle = math.radians(-45.0 * (1.0 + random.uniform(-0.1, 0.1)))
+        phase = random.uniform(0.0, math.tau)
+        phase_speed = random.uniform(0.04, 0.08)
+        sway = random.uniform(0.8, 1.4)
         tint = random.choice([(70, 140, 70), (60, 120, 60), (90, 160, 90)])
-        return [x, y, speed, size, drift, wobble, angle, tint]
+        return [x, y, speed, size, drift, wobble, angle, tint, phase, phase_speed, sway]
 
     def apply_settings(self, intensity, wind, speed_mult, length_mult, ramp_seconds):
         self.intensity_max = max(0, int(intensity))
@@ -270,7 +273,9 @@ class LeavesEffect:
                 del self.leaves[desired:]
 
         for leaf in self.leaves:
-            leaf[0] += leaf[4] + (leaf[5] * 0.08)
+            leaf[8] += leaf[9]
+            sway_x = math.sin(leaf[8]) * (leaf[10] * 0.9)
+            leaf[0] += leaf[4] + (leaf[5] * 0.08) + sway_x
             leaf[1] += leaf[2]
             if leaf[1] - leaf[3] > self.height:
                 leaf[:] = self._new_leaf(start_above=True)
@@ -280,7 +285,7 @@ class LeavesEffect:
     def draw(self, screen):
         if screen is None:
             return
-        for x, y, _speed, size, _drift, _wobble, angle, tint in self.leaves:
+        for x, y, _speed, size, _drift, _wobble, angle, tint, _phase, _phase_speed, _sway in self.leaves:
             w = size
             h = size * 1.4
             dx = w * 0.6
@@ -295,7 +300,7 @@ class LeavesEffect:
                 rotated.append((x + rx, y + ry))
             pygame.draw.polygon(screen.surface, tint, rotated, 0)
             # small stem
-            stem_len = size * 0.8
+            stem_len = size * 1.65
             stem_start = (x + cos_a * size * 0.6, y + sin_a * size * 0.6)
             stem_end = (x + cos_a * (size * 0.6 + stem_len), y + sin_a * (size * 0.6 + stem_len))
             screen.draw.line(stem_start, stem_end, (40, 80, 40))
@@ -394,13 +399,12 @@ class WeatherSystem:
     def __init__(self):
         self.effect = None
         self.active_kind = None
-        self.settings = {
-            "intensity": 0,
-            "wind": 0.0,
-            "speed": 1.0,
-            "length": 1.0,
-            "ramp_seconds": 2.0,
+        self.presets = {
+            "rain": {"intensity": 140, "wind": 0.0, "speed": 1.0, "length": 1.0, "ramp_seconds": 5},
+            "snow": {"intensity": 120, "wind": 0.1, "speed": 0.5, "length": 1.0, "ramp_seconds": 5},
+            "leaves": {"intensity": 50, "wind": 0, "speed": 0.25, "length": 1.0, "ramp_seconds": 5},
         }
+        self.settings = self.presets["rain"].copy()
 
     def set_weather(self, kind):
         if kind is None:
@@ -413,12 +417,13 @@ class WeatherSystem:
                 self.stop()
                 self.active_kind = None
                 return
+            base = self.presets.get(kind_type, self.presets["rain"])
             self.settings = {
-                "intensity": int(kind.get("intensity", 140)),
-                "wind": float(kind.get("wind", 0.0)),
-                "speed": float(kind.get("speed", 1.0)),
-                "length": float(kind.get("length", 1.0)),
-                "ramp_seconds": float(kind.get("ramp_seconds", 2.0)),
+                "intensity": int(kind.get("intensity", base["intensity"])),
+                "wind": float(kind.get("wind", base["wind"])),
+                "speed": float(kind.get("speed", base["speed"])),
+                "length": float(kind.get("length", base["length"])),
+                "ramp_seconds": float(kind.get("ramp_seconds", base["ramp_seconds"])),
             }
             if self.active_kind != kind_type or self.effect is None:
                 if kind_type == "rain":
@@ -438,13 +443,7 @@ class WeatherSystem:
             self.active_kind = kind_type
             return
         if kind in ("rain", "snow", "leaves"):
-            self.settings = {
-                "intensity": 140,
-                "wind": 0.0,
-                "speed": 1.0,
-                "length": 1.0,
-                "ramp_seconds": 2.0,
-            }
+            self.settings = self.presets[kind].copy()
             if self.active_kind != kind or self.effect is None:
                 if kind == "rain":
                     self.effect = RainEffect()
