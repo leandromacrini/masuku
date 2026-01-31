@@ -18,21 +18,8 @@ def setup_stages():
     STAGES = (
         Stage(max_scroll_x=0, enemies=[], weather={"type": "none"}, music_track="theme_jap"),
 
-        Stage(max_scroll_x=300,
-              enemies=[EnemyVax(pos=(1000, 400))],
-              #weapons=[Barrel((300, 400))],
-              #powerups=[HealthPowerup(pos=(1100, MIN_WALK_Y)), ExtraLifePowerup(pos=(1000, MIN_WALK_Y))]
-              ),
-
-        Stage(max_scroll_x=600,
-              enemies=[EnemyScooterboy(pos=(200, 400))]),
-
-        Stage(max_scroll_x=900,
-              enemies=[EnemyBoss(pos=(1800, 400)),
-                       EnemyVax(pos=(400, 400))]),
-
         BossStage(max_scroll_x=1000,
-              boss=EnemyKasaobake(pos=(1100, 400)),
+              boss=EnemyKasaobake(pos=(1400, 400)),
               music_track="final_boss",
               weather={"type": "rain", "intensity": 140, "wind": 0.0, "speed": 1.0, "length": 1.0, "ramp_seconds": 2.0},
             ),
