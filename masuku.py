@@ -143,11 +143,28 @@ def update():
 
     elif state == State.GAME_OVER:
         if button_pressed_controls(0) is not None:
-            # Go back into title screen mode
-            state = State.TITLE
-            game = None
-            runtime.set_game(None)
+            if(True or game.check_won()):
+                # Play credits if player won
+                state = State.CREDITS
+                game.credits_active = True
+                game.text_active = True
+                game.current_text = game.outro_text
+                game.displayed_text = ""
+                game.timer = 0
+            else:
+                # Go back into title screen mode
+                game = None
+                runtime.set_game(game)
+                state = State.TITLE
 
+    elif state == State.CREDITS:
+        game.update()
+        if button_pressed_controls(0) is not None:
+            game.text_active = False
+            game = None
+            runtime.set_game(game)
+            state = State.TITLE
+            
 
 def on_key_down(key):
     if key == keys.F11:
@@ -184,6 +201,8 @@ def draw():
         else:
             img = images.load("ui/status_lose")
         screen.blit(img, (LOGICAL_WIDTH // 2 - img.get_width() // 2, LOGICAL_HEIGHT // 2 - img.get_height() // 2))
+    elif state == State.CREDITS:
+        game.draw(screen)
 
     pgzgame.screen = real_game_surface
     screen.surface = real_surface

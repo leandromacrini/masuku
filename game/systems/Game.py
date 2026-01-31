@@ -66,6 +66,7 @@ class Game:
         self.current_text = self.intro_text
         self.displayed_text = ""
 
+        self.credits_active = False
         self.boss_intro_active = False
         self.boss_intro_phase = None
         self.boss_intro_timer = 0
@@ -143,6 +144,22 @@ class Game:
         weather = runtime.get_weather()
         if weather is not None:
             weather.update()
+        
+        if self.credits_active:
+            # Every 6 frames, update the displayed text to display an extra character, and make a sound if the
+            # new character is visible (as opposed to a space or new line)
+            if self.timer % 6 == 0 and len(self.displayed_text) < len(self.current_text):
+                length_to_display = min(self.timer // 6, len(self.current_text))
+                self.displayed_text = self.current_text[:length_to_display]
+                if not self.displayed_text[-1].isspace():
+                    self.play_sound("sfx/ui/teletype")
+
+            # Allow player to skip/leave text
+            for button in range(4):
+                if self.player.controls.button_pressed(button):
+                    self.credits_active = False
+                    self.timer = 0
+            return
 
         if self.text_active:
             # Every 6 frames, update the displayed text to display an extra character, and make a sound if the
@@ -224,7 +241,7 @@ class Game:
 
         # Remove expired enemies and gain score
         self.score += sum([enemy.score for enemy in self.enemies if enemy.lives <= 0])
-        self.enemies = [enemy for enemy in self.enemies if not enemy.should_remove()]
+        self.enemies = [enemy for enemy in self.enemies if enemy.lives > 0]
 
         # Remove expired scooters
         self.scooters = [scooter for scooter in self.scooters if scooter.frame < 200]

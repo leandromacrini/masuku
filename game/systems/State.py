@@ -6,3 +6,4 @@ class State(Enum):
     CONTROLS = 2
     PLAY = 3
     GAME_OVER = 4
+    CREDITS = 5
