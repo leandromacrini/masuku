@@ -147,10 +147,8 @@ def update():
                 # Play credits if player won
                 state = State.CREDITS
                 game.credits_active = True
-                game.text_active = True
-                game.current_text = game.outro_text
-                game.displayed_text = ""
-                game.timer = 0
+                game.text_active = False
+                game.start_credits()
             else:
                 # Go back into title screen mode
                 game = None

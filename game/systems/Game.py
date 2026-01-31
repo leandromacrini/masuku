@@ -67,6 +67,16 @@ class Game:
         self.displayed_text = ""
 
         self.credits_active = False
+        self.credits_scroll_y = 0
+        self.credits_scroll_speed = 1.0
+        self.credits_layout = []
+        self.credits_items = [
+            {"type": "center", "text": "THANKS FOR PLAYING"},
+            {"type": "side", "side": "left", "image": "credits/team", "text": "CODE\nTEAM"},
+            {"type": "side", "side": "right", "image": "credits/art", "text": "ART\nTEAM"},
+            {"type": "center", "text": "SPECIAL THANKS"},
+            {"type": "side", "side": "left", "image": "credits/music", "text": "MUSIC\nSFX"},
+        ]
         self.boss_intro_active = False
         self.boss_intro_phase = None
         self.boss_intro_timer = 0
@@ -146,19 +156,7 @@ class Game:
             weather.update()
         
         if self.credits_active:
-            # Every 6 frames, update the displayed text to display an extra character, and make a sound if the
-            # new character is visible (as opposed to a space or new line)
-            if self.timer % 6 == 0 and len(self.displayed_text) < len(self.current_text):
-                length_to_display = min(self.timer // 6, len(self.current_text))
-                self.displayed_text = self.current_text[:length_to_display]
-                if not self.displayed_text[-1].isspace():
-                    self.play_sound("sfx/ui/teletype")
-
-            # Allow player to skip/leave text
-            for button in range(4):
-                if self.player.controls.button_pressed(button):
-                    self.credits_active = False
-                    self.timer = 0
+            self.update_credits()
             return
 
         if self.text_active:
@@ -260,6 +258,9 @@ class Game:
             print(f"update: {p.get_ms()}")
 
     def draw(self, screen):
+        if self.credits_active:
+            self.draw_credits(screen)
+            return
         # Draw background
         self.draw_background(screen)
 
@@ -356,6 +357,67 @@ class Game:
                 draw_text_otf(screen, enemy.title_name, BOSS_NAME_X_POS, BOSS_NAME_Y_POS, font_mikachan, BOSS_COLOR_RED, True)
                 health_bar_w = int((enemy.health / enemy.start_health) * BOSS_HEALTH_STAMINA_BAR_WIDTH)
                 screen.surface.blit(images.load("ui/health_boss"), (BOSS_HEALTH_BAR_X_POS, BOSS_HEALTH_BAR_Y_POS), Rect(0, 0, health_bar_w, BOSS_HEALTH_STAMINA_BAR_HEIGHT))
+
+    def start_credits(self):
+        self.credits_active = True
+        self.credits_scroll_y = HEIGHT + 40
+        self.credits_layout = self.build_credits_layout()
+
+    def build_credits_layout(self):
+        layout = []
+        line_height = font_mikachan.size("A")[1] + 4
+        spacing = 40
+        y = 0
+        for item in self.credits_items:
+            text = item.get("text", "")
+            lines = text.splitlines() if text else []
+            text_h = max(1, len(lines)) * line_height
+            image_h = 0
+            if item.get("type") == "side" and item.get("image"):
+                try:
+                    img = images.load(item["image"])
+                    image_h = img.get_height()
+                except Exception:
+                    image_h = 0
+            height = max(text_h, image_h) + spacing
+            layout.append({"item": item, "y": y, "height": height, "line_height": line_height})
+            y += height
+        return layout
+
+    def update_credits(self):
+        self.credits_scroll_y -= self.credits_scroll_speed
+
+    def draw_credits(self, screen):
+        screen.fill((0, 0, 0))
+        if not self.credits_layout:
+            return
+        for entry in self.credits_layout:
+            item = entry["item"]
+            y = self.credits_scroll_y + entry["y"]
+            line_height = entry["line_height"]
+            if y > HEIGHT + 200 or y + entry["height"] < -200:
+                continue
+            if item.get("type") == "center":
+                lines = item.get("text", "").splitlines()
+                for i, line in enumerate(lines):
+                    draw_text_otf(screen, line, WIDTH // 2 - 200, y + i * line_height, font_mikachan_big, (255, 255, 255))
+            elif item.get("type") == "side":
+                side = item.get("side", "left")
+                text = item.get("text", "")
+                lines = text.splitlines()
+                img_name = item.get("image")
+                img = None
+                if img_name:
+                    try:
+                        img = images.load(img_name)
+                    except Exception:
+                        img = None
+                if img is not None:
+                    img_x = 60 if side == "left" else WIDTH - img.get_width() - 60
+                    screen.blit(img, (img_x, y))
+                text_x = 260 if side == "left" else 60
+                for i, line in enumerate(lines):
+                    draw_text_otf(screen, line, text_x, y + i * line_height, font_mikachan, (255, 255, 255))
 
     def prepare_boss_intro(self, stage):
         self.boss_intro_active = True
