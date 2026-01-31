@@ -80,7 +80,7 @@ BACKGROUND_TILE_SPACING = 290
 
 BACKGROUND_TILES_RAW = [
     # 1st row of TILE_DEMO+_3.png
-    "wall_end1", "wall_fill1", "wall_fill5", "wall_fill2", "alley1", "wall_end6", "wall_fill7",
+    "wall_end1", "anime_alley1", "anime_alley2", "wall_end1", "wall_fill1", "wall_fill5", "wall_fill2", "alley1", "wall_end6", "wall_fill7",
     "wall_fill5", "alley2", "wall_end3", "wall_fill3", "wall_fill4", "wall_fill8", "alley5",
     "wall_end2", "alley3", "wall_end4", "wall_fill6",
     # row 2
