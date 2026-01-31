@@ -23,6 +23,8 @@ class Enemy(Fighter, ABC):
         RIDING_SCOOTER = 5
         PORTAL = 6
         PORTAL_EXPLODE = 7
+        RETREAT = 8
+        IDLE = 9
 
     class EnemyType(Enum):
         NORMAL = 0
@@ -57,6 +59,7 @@ class Enemy(Fighter, ABC):
         self.enemy_type = enemy_type
         self.title_name = name
         self.state_timer = start_timer
+        self.retreat_dir = 0
 
         self.attacks = attacks
         self.approach_player_distance = approach_player_distance
@@ -119,17 +122,33 @@ class Enemy(Fighter, ABC):
             # Check to see if we've got up again, if so switch state
             if self.falling_state == Fighter.FallingState.STANDING:
                 self.make_decision()
+        elif self.state == Enemy.State.RETREAT:
+            # After getting up, walk towards nearest edge and exit
+            if self.falling_state == Fighter.FallingState.STANDING:
+                if self.retreat_dir == 0:
+                    dist_left = abs(self.vpos.x - runtime.game.boundary.left)
+                    dist_right = abs(runtime.game.boundary.right - self.vpos.x)
+                    self.retreat_dir = -1 if dist_left <= dist_right else 1
+                self.facing_x = self.retreat_dir
+                target_x = runtime.game.boundary.left - 200 if self.retreat_dir < 0 else runtime.game.boundary.right + 200
+                self.target = Vector2(target_x, self.vpos.y)
+        elif self.state == Enemy.State.IDLE:
+            # Controlled externally (e.g. boss intro), no AI decisions.
+            self.target = Vector2(self.vpos)
+            self.walking = False
 
         # Update of RIDING_SCOOTER state is in EnemyScooterboy class
 
         if self.state == Enemy.State.APPROACH_PLAYER \
                 or self.state == Enemy.State.GO_TO_POS \
-                or self.state == Enemy.State.GO_TO_WEAPON:
+                or self.state == Enemy.State.GO_TO_WEAPON \
+                or self.state == Enemy.State.RETREAT:
             # Ensure that target position is within the level boundary
-            self.target.x = max(self.target.x, runtime.game.boundary.left)
-            self.target.x = min(self.target.x, runtime.game.boundary.right)
-            self.target.y = max(self.target.y, runtime.game.boundary.top)
-            self.target.y = min(self.target.y, runtime.game.boundary.bottom)
+            if self.state != Enemy.State.RETREAT:
+                self.target.x = max(self.target.x, runtime.game.boundary.left)
+                self.target.x = min(self.target.x, runtime.game.boundary.right)
+                self.target.y = max(self.target.y, runtime.game.boundary.top)
+                self.target.y = min(self.target.y, runtime.game.boundary.bottom)
 
             # Check to see if another enemy is already heading for the new target pos, or one very close to it.
             # If so, make a new decision
@@ -212,6 +231,9 @@ class Enemy(Fighter, ABC):
         if self.state == Enemy.State.KNOCKED_DOWN:
             # Already knocked down
             return
+        if self.state == Enemy.State.RETREAT or self.state == Enemy.State.IDLE:
+            # Immune while retreating or idle
+            return
 
         super().hit(hitter, attack)
 
@@ -227,7 +249,17 @@ class Enemy(Fighter, ABC):
             self.state = Enemy.State.KNOCKED_DOWN
             self.log("Knocked down")
 
+        if self.enemy_type == Enemy.EnemyType.NORMAL and self.health <= 0:
+            self.health = 0
+            self.falling_state = Fighter.FallingState.GETTING_UP
+            self.frame = 0
+            self.state = Enemy.State.RETREAT
+            self.retreat_dir = 0
+            self.log("Retreat")
+
     def make_decision(self):
+        if self.state == Enemy.State.IDLE:
+            return
         player = runtime.game.player
 
         # If we're not going for a weapon:
@@ -281,3 +313,13 @@ class Enemy(Fighter, ABC):
                 self.log("Pause")
                 self.state_timer = randint(50, 100)
                 self.state = Enemy.State.PAUSE
+
+    def should_remove(self):
+        if self.state != Enemy.State.RETREAT:
+            return self.lives <= 0
+        # Use screen-space position so moving boundaries don't prevent cleanup
+        if self.retreat_dir < 0 and self.x < -200:
+            return True
+        if self.retreat_dir > 0 and self.x > WIDTH + 200:
+            return True
+        return False

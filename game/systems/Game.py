@@ -74,6 +74,9 @@ class Game:
         self.boss_intro_stage = None
         self.boss_intro_scroll_target_x = None
         self.boss_intro_overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+        self.boss_intro_scroll_start_x = None
+        self.boss_intro_boss_start_x = None
+        self.boss_intro_boss_target_x = None
 
     def next_stage(self):
         # A stage is over when we've scrolled to its max_scroll_x and there are no enemies left
@@ -117,9 +120,15 @@ class Game:
         self.weapons.extend(stage.weapons)
         self.powerups.extend(stage.powerups)
 
-        if isinstance(stage, BossStage) and not stage.intro_played:
-            self.prepare_boss_intro(stage)
-            stage.intro_played = True
+        if isinstance(stage, BossStage):
+            # Keep boss offscreen and paused until intro starts
+            boss = stage.boss
+            boss.state = Enemy.State.IDLE
+            boss.state_timer = 0
+            boss.vpos.x = stage.max_scroll_x + WIDTH + 200
+            boss.target = boss.vpos.copy()
+
+        # Boss intro is triggered later (after scroll/player position), see update()
 
     def spawn_enemy(self, enemy):
         # Called by Portal
@@ -175,6 +184,13 @@ class Game:
             else:
                 # Scrolling is complete
                 self.scrolling = False
+                # Trigger boss intro only after scroll finishes and player is near the right side
+                if self.stage_index < len(stage_setup.STAGES):
+                    stage = stage_setup.STAGES[self.stage_index]
+                    if isinstance(stage, BossStage) and not stage.intro_played:
+                        if self.player.vpos.x - self.scroll_offset.x >= WIDTH/3:
+                            self.prepare_boss_intro(stage)
+                            stage.intro_played = True
         else:
             # Start scrolling if player is near right hand edge of screen and max_scroll_offset_x allows to to scroll
             begin_scroll_boundary = WIDTH - 300
@@ -186,10 +202,29 @@ class Game:
                     print("Started scrolling - create stage objects")
                     stage = stage_setup.STAGES[self.stage_index]
                     self.create_stage_objects(stage)
+            else:
+                # Earlier scroll trigger for boss stages
+                if self.stage_index < len(stage_setup.STAGES):
+                    stage = stage_setup.STAGES[self.stage_index]
+                    if isinstance(stage, BossStage):
+                        boss_scroll_boundary = WIDTH - 450
+                        if self.player.vpos.x - self.scroll_offset.x > boss_scroll_boundary and self.scroll_offset.x < self.max_scroll_offset_x:
+                            self.scrolling = True
+                            print("Started scrolling (boss stage) - create stage objects")
+                            self.create_stage_objects(stage)
+
+        # Fallback trigger if scroll is already finished (or never started)
+        if self.stage_index < len(stage_setup.STAGES):
+            stage = stage_setup.STAGES[self.stage_index]
+            if isinstance(stage, BossStage) and not stage.intro_played and not self.boss_intro_active:
+                if self.scroll_offset.x >= self.max_scroll_offset_x:
+                    if self.player.vpos.x - self.scroll_offset.x >= WIDTH - 260:
+                        self.prepare_boss_intro(stage)
+                        stage.intro_played = True
 
         # Remove expired enemies and gain score
         self.score += sum([enemy.score for enemy in self.enemies if enemy.lives <= 0])
-        self.enemies = [enemy for enemy in self.enemies if enemy.lives > 0]
+        self.enemies = [enemy for enemy in self.enemies if not enemy.should_remove()]
 
         # Remove expired scooters
         self.scooters = [scooter for scooter in self.scooters if scooter.frame < 200]
@@ -299,7 +334,7 @@ class Game:
 
     def draw_ui_boss(self,screen):
         for enemy in self.enemies:
-            if enemy.enemy_type in [Enemy.EnemyType.MID_BOSS, Enemy.EnemyType.FINAL_BOSS] and not self.boss_intro_active :
+            if enemy.enemy_type in [Enemy.EnemyType.MID_BOSS, Enemy.EnemyType.FINAL_BOSS] and not self.boss_intro_active and self.boss_intro_phase is None and enemy.state != Enemy.State.IDLE:
                 draw_text_otf(screen, enemy.title_name, BOSS_NAME_X_POS + 1, BOSS_NAME_Y_POS + 1, font_mikachan, BOSS_COLOR_SHADOW, True )
                 draw_text_otf(screen, enemy.title_name, BOSS_NAME_X_POS, BOSS_NAME_Y_POS, font_mikachan, BOSS_COLOR_RED, True)
                 health_bar_w = int((enemy.health / enemy.start_health) * BOSS_HEALTH_STAMINA_BAR_WIDTH)
@@ -311,10 +346,13 @@ class Game:
         self.boss_intro_timer = 0
         self.boss_intro_stage = stage
         self.boss_intro_boss = stage.boss
-        self.boss_intro_target_x = stage.boss.vpos.x
+        # Snapshot deterministic targets
+        self.boss_intro_scroll_start_x = self.scroll_offset.x
         self.boss_intro_scroll_target_x = stage.max_scroll_x
-        start_x = max(self.scroll_offset.x + WIDTH + 120, self.boss_intro_target_x + 200)
-        stage.boss.vpos.x = start_x
+        self.boss_intro_boss_target_x = self.scroll_offset.x + WIDTH - 220
+        self.boss_intro_boss_start_x = self.scroll_offset.x + WIDTH + 220
+        stage.boss.vpos.x = self.boss_intro_boss_start_x
+        stage.boss.target = stage.boss.vpos.copy()
         stage.boss.facing_x = -1
         stage.boss.walking = True
 
@@ -327,11 +365,10 @@ class Game:
         stage = self.boss_intro_stage
 
         if self.boss_intro_phase == "scroll":
-            # Finish scroll before boss enters
+            # Finish scroll before boss enters (deterministic target)
             if self.scroll_offset.x < self.boss_intro_scroll_target_x:
                 diff = self.boss_intro_scroll_target_x - self.scroll_offset.x
-                scroll_speed = self.player.x / (WIDTH / 4)
-                scroll_speed = min(diff, max(2.0, scroll_speed))
+                scroll_speed = max(2.0, min(diff, 6.0))
                 self.scroll_offset.x += scroll_speed
                 self.boundary.left = self.scroll_offset.x
             if self.scroll_offset.x >= self.boss_intro_scroll_target_x:
@@ -339,8 +376,8 @@ class Game:
         elif self.boss_intro_phase == "walk":
             boss.walking = True
             boss.frame += 1
-            boss.vpos.x, _ = move_towards(boss.vpos.x, self.boss_intro_target_x, stage.intro_walk_speed)
-            if boss.vpos.x == self.boss_intro_target_x:
+            boss.vpos.x, _ = move_towards(boss.vpos.x, self.boss_intro_boss_target_x, stage.intro_walk_speed)
+            if boss.vpos.x == self.boss_intro_boss_target_x:
                 boss.walking = False
                 boss.frame = 0
                 self.boss_intro_phase = "title"
@@ -351,6 +388,11 @@ class Game:
                 self.boss_intro_active = False
                 self.boss_intro_phase = None
                 self.boss_intro_timer = 0
+                # Release boss AI after intro
+                boss.state = Enemy.State.APPROACH_PLAYER
+                boss.state_timer = 0
+                if hasattr(boss, "make_decision"):
+                    boss.make_decision()
 
     def draw_boss_intro(self, screen):
         if self.boss_intro_boss is None or self.boss_intro_stage is None:
