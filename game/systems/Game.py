@@ -38,14 +38,15 @@ class Game:
 
         self.boundary = Rect(0, MIN_WALK_Y, WIDTH-1, HEIGHT-MIN_WALK_Y)
 
-        stage_setup.setup_stages()
+        #stage_setup.setup_stages()
+        stage_setup.setup_stage_final()
 
         self.text_active = INTRO_ENABLED
         self.intro_text = "\nIt took me ages to build this mask.\n" \
                         + "There are no pencils in the demons\nworld.\n" \
                         + "There is no paper, only hunger,\nhate and rage. \n" \
                         + "But I collected some pieces there\n" \
-                        + "some pieces here and i managed\nto draw this face of a human. \n" \
+                        + "some pieces here and I managed\nto draw this face of a human. \n" \
                         + "Now finally I can walk among them."
 
         self.outro_text = "\nI defeated all this other demons \n" \
@@ -70,7 +71,7 @@ class Game:
 
             {"type": "center", "text": "Developers", "header": "True"},
             {"type": "center", "text": "Leandro 'Sir_Leon' Macrini"},
-            {"type": "center", "text": "xander8x"},
+            {"type": "center", "text": "Alessandro 'xander8x' Malerba"},
 
             {"type": "center", "text": "Artist Team", "header": "True"},
             {"type": "center", "text": "Paolo Tomeo"},
@@ -94,13 +95,26 @@ class Game:
             {"type": "center", "text": ""},
             {"type": "side", "side": "left", "image": "credits/tengu","text": "天狗 (Tengu)\nTengu are mountain yōkai\nwith an appearance\nthat is half human and half bird.\nThey are masters of martial arts and\nswordsmanship,\nextremely skilled and powerful.\nProud and severe, they punish arrogance\nand vanity."},
             {"type": "center", "text": ""},
-            {"type": "side", "side": "right", "image": "credits/inari", "text": "稲荷 (Inari)\nInari is a kami associated with rice,\nabundance, and prosperity.Inari is often\naccompanied by sacred foxes,known as\nkitsune, who act as messengers."},
+            {"type": "side", "side": "right", "image": "credits/inari", "text": "稲荷 (Inari)\nInari is a kami associated with rice,\nabundance, and prosperity. Inari is often\naccompanied by sacred foxes,known as\nkitsune, who act as messengers."},
 
             {"type": "center", "text": ""},
-            {"type": "center", "text": "Thanks everyone!", "header":"True"},
-            {"type": "center", "text": "Thanks to"},
+            {"type": "center", "text": "Thanks to", "header":"True"},
             {"type": "center", "image": "credits/bolognanerd"},
-            {"type": "center", "text": "See you at next Global Game Jam!"},
+            {"type": "center", "text": "See you at next Global Game Jam!", "header":"True"},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": "OK, that's it."},
+            {"type": "center", "text": "Turn off your computer and go to the sleep!"},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "end"},
         ]
         self.boss_intro_active = False
         self.boss_intro_phase = None
@@ -130,7 +144,7 @@ class Game:
             if weather is not None:
                 weather.set_weather(stage.weather)
             if self.scrolling or self.max_scroll_offset_x <= self.scroll_offset.x:
-                print("No scrolling or already scrolling - create stage objects")
+                print(f"No scrolling or already scrolling - create stage objects")
                 self.create_stage_objects(stage)
         else:
             weather = runtime.get_weather()
@@ -149,6 +163,7 @@ class Game:
         return self.stage_index >= len(stage_setup.STAGES) and not self.text_active
 
     def create_stage_objects(self, stage):
+        print(stage.name)
         # Copy the enemies list from the stage, and tell them that they've been spawned
         self.enemies = stage.enemies.copy()
         for enemy in self.enemies:
@@ -366,15 +381,17 @@ class Game:
         screen.blit("ui/status", (0, 0))
 
         for i in range(self.player.lives):
-            if self.player.extra_life_timer <= 0 or i < self.player.lives - 1:
-                sprite_idx = 9
-            else:
-                sprite_idx = min(9, (30 - self.player.extra_life_timer) // 3)
-
-            screen.blit(f"ui/status_life{sprite_idx}", (i * 46 - 55, -35))
+            # if self.player.extra_life_timer <= 0 or i < self.player.lives - 1:
+            #      sprite_idx = 9
+            #  else:
+            #      sprite_idx = min(9, (30 - self.player.extra_life_timer) // 3)
+            sprite_idx = 9
+            img = images.load(f"ui/status_life{sprite_idx}")
+            img = pygame.transform.smoothscale(img, (img.get_width() * 0.20, img.get_height() * 0.20))
+            screen.blit(img, (i * 35 + 15, 35))
 
         # Show score
-        draw_text(screen, f"{self.score:04}", WIDTH // 2, 0, True)
+        draw_text(screen, f"{self.score:04}", WIDTH // 2, 18, True, color=(0,0,255))
 
 
     def draw_ui_boss(self,screen):
@@ -464,6 +481,8 @@ class Game:
 
                 for i, line in enumerate(lines):
                     draw_text_otf(screen, line, text_x, y + i * line_height, font_credits, (255, 255, 255))
+            elif item.get("type") == "end":
+                self.credits_scroll_speed = 0
 
     def prepare_boss_intro(self, stage):
         self.boss_intro_active = True
@@ -474,8 +493,8 @@ class Game:
         # Snapshot deterministic targets
         self.boss_intro_scroll_start_x = self.scroll_offset.x
         self.boss_intro_scroll_target_x = stage.max_scroll_x
-        self.boss_intro_boss_target_x = self.scroll_offset.x + WIDTH - 120
-        self.boss_intro_boss_start_x = self.scroll_offset.x + WIDTH + 120
+        self.boss_intro_boss_target_x = self.scroll_offset.x + WIDTH - 220
+        self.boss_intro_boss_start_x = self.scroll_offset.x + WIDTH + 220
         stage.boss.vpos.x = self.boss_intro_boss_start_x
         stage.boss.target = stage.boss.vpos.copy()
         stage.boss.facing_x = -1
