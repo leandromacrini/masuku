@@ -113,4 +113,7 @@ SPRITE_DIRS = {
     "kasaobake": "characters/kasaobake",
     "onna": "characters/onna",
     "kappa": "characters/kappa",
+    "tanuki": "characters/tanuki",
+    "inari": "characters/inari",
+    "tengu": "characters/tengu",
 }

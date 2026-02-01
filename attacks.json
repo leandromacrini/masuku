@@ -457,6 +457,82 @@
    4
   ]
  },
+ "tengu_fight": {
+  "sprite": "fight",
+  "strength": 6,
+  "anim_time": 27,
+  "frame_time": 9,
+  "frames": 2,
+  "hit_frames": [
+   1
+  ],
+  "recovery_time": 10,
+  "initial_sound": [
+   "sfx/attacks/kick_whoosh",
+   1
+  ],
+  "hit_sound": [
+   "sfx/attacks/kick_hit",
+   1
+  ]
+ },
+ "tanuki_attack": {
+  "sprite": "attack",
+  "strength": 6,
+  "anim_time": 27,
+  "frame_time": 9,
+  "frames": 2,
+  "hit_frames": [
+   1
+  ],
+  "recovery_time": 10,
+  "initial_sound": [
+   "sfx/attacks/kick_whoosh",
+   1
+  ],
+  "hit_sound": [
+   "sfx/attacks/kick_hit",
+   1
+  ]
+ },
+ "inari_fight": {
+  "sprite": "fight",
+  "strength": 6,
+  "anim_time": 27,
+  "frame_time": 9,
+  "frames": 3,
+  "hit_frames": [
+   2
+  ],
+  "recovery_time": 10,
+  "initial_sound": [
+   "sfx/attacks/kick_whoosh",
+   2
+  ],
+  "hit_sound": [
+   "sfx/attacks/kick_hit",
+   2
+  ]
+ },
+"inari_kick": {
+  "sprite": "kick",
+  "strength": 6,
+  "anim_time": 27,
+  "frame_time": 9,
+  "frames": 2,
+  "hit_frames": [
+   1
+  ],
+  "recovery_time": 10,
+  "initial_sound": [
+   "sfx/attacks/kick_whoosh",
+   1
+  ],
+  "hit_sound": [
+   "sfx/attacks/kick_hit",
+   1
+  ]
+ },
 "kappa_fight": {
   "sprite": "fight",
   "strength": 2,
@@ -474,6 +550,25 @@
   "hit_sound": [
    "sfx/attacks/kick_hit",
    4
+  ]
+ },
+ "kappa_kick": {
+  "sprite": "kick",
+  "strength": 2,
+  "anim_time": 27,
+  "frame_time": 9,
+  "frames": 3,
+  "hit_frames": [
+   2
+  ],
+  "recovery_time": 50,
+  "initial_sound": [
+   "sfx/attacks/kick_whoosh",
+   3
+  ],
+  "hit_sound": [
+   "sfx/attacks/kick_hit",
+   3
   ]
  },
 "boss_grab_player": {

@@ -10,8 +10,8 @@ import game.runtime as runtime
 
 class EnemyTanuki(Enemy):
     def __init__(self, pos, start_timer=20):
-        super().__init__(pos, "tanuki", ("tanuki_lattack", "tanuki_rattack", "tanuki_special"),
-                         speed=Vector2(0.5, 0.5), health=10, stamina=1000, start_timer=start_timer,
+        super().__init__(pos, "tanuki", ("tanuki_attack", "tanuki_attack"),
+                         speed=Vector2(0.5, 0.5), health=10, stamina=1000, start_timer=start_timer,anchor_y=280,
                          score=100, enemy_type=Enemy.EnemyType.MID_BOSS)
         self.title_name = "狸 (Tanuki)"
         self.boss_intro_image = "tanuki_boss_intro"
