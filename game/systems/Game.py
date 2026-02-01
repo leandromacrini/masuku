@@ -74,7 +74,7 @@ class Game:
             {"type": "center", "text": "Alessandro 'xander8x' Malerba"},
 
             {"type": "center", "text": "Artist Team", "header": "True"},
-            {"type": "center", "text": "Paolo Tomeo"},
+            {"type": "center", "text": "Paolo 'TheUnclePo' Tomeo"},
             {"type": "center", "text": "crimson2000"},
             {"type": "center", "text": "Alessia Di Vittorio"},
             {"type": "center", "text": "drowsiness"},
