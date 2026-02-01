@@ -70,7 +70,7 @@ def setup_stage_final():
         BossStage(max_scroll_x=3000,name="Tanuki_boss",
                   boss=EnemyTanuki(pos=(3800, 400)), # da cambiare
                   music_track="final_boss",
-                  weather="leafs",
+                  weather="leaves",
                   ),
 
         # ============================================================================
@@ -102,7 +102,7 @@ def setup_stage_final():
         BossStage(max_scroll_x=10000,name="Inari4",
                   boss=EnemyInari(pos=(10500, 400)), #da cambiare
                   music_track="final_boss",
-                  weather="leafs",
+                  weather="leaves",
                   ),
         )
 
