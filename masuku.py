@@ -228,7 +228,9 @@ def draw():
 
     elif state == State.CONTROLS:
         screen.fill((0, 0, 0))
-        screen.blit("ui/menu_controls", (0, 0))
+        image = images.load("ui/menu_controls")
+        image = pygame.transform.smoothscale(image, (800, 480))
+        screen.blit(image, (0, 0))
 
     elif state == State.PLAY:
         game.draw(screen)
