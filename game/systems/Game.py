@@ -38,7 +38,8 @@ class Game:
 
         self.boundary = Rect(0, MIN_WALK_Y, WIDTH-1, HEIGHT-MIN_WALK_Y)
 
-        stage_setup.setup_stages()
+        #stage_setup.setup_stages()
+        stage_setup.setup_stage_final()
 
         self.text_active = INTRO_ENABLED
         self.intro_text = "\nIt took me ages to build this mask.\n" \
@@ -70,7 +71,7 @@ class Game:
 
             {"type": "center", "text": "Developers", "header": "True"},
             {"type": "center", "text": "Leandro 'Sir_Leon' Macrini"},
-            {"type": "center", "text": "xander8x"},
+            {"type": "center", "text": "Alessandro 'xander8x' Malerba"},
 
             {"type": "center", "text": "Artist Team", "header": "True"},
             {"type": "center", "text": "Paolo Tomeo"},
@@ -143,7 +144,7 @@ class Game:
             if weather is not None:
                 weather.set_weather(stage.weather)
             if self.scrolling or self.max_scroll_offset_x <= self.scroll_offset.x:
-                print("No scrolling or already scrolling - create stage objects")
+                print(f"No scrolling or already scrolling - create stage objects")
                 self.create_stage_objects(stage)
         else:
             weather = runtime.get_weather()
@@ -162,6 +163,7 @@ class Game:
         return self.stage_index >= len(stage_setup.STAGES) and not self.text_active
 
     def create_stage_objects(self, stage):
+        print(stage.name)
         # Copy the enemies list from the stage, and tell them that they've been spawned
         self.enemies = stage.enemies.copy()
         for enemy in self.enemies:
@@ -385,11 +387,11 @@ class Game:
             #      sprite_idx = min(9, (30 - self.player.extra_life_timer) // 3)
             sprite_idx = 9
             img = images.load(f"ui/status_life{sprite_idx}")
-            img = pygame.transform.smoothscale(img, (img.get_width() * 0.25, img.get_height() * 0.25))
-            screen.blit(img, (i * 35 + 10, 25))
+            img = pygame.transform.smoothscale(img, (img.get_width() * 0.20, img.get_height() * 0.20))
+            screen.blit(img, (i * 35 + 15, 35))
 
         # Show score
-        draw_text(screen, f"{self.score:04}", WIDTH // 2, 0, True)
+        draw_text(screen, f"{self.score:04}", WIDTH // 2, 18, True, color=(0,0,255))
 
 
     def draw_ui_boss(self,screen):
