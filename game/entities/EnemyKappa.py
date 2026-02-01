@@ -14,5 +14,5 @@ import game.runtime as runtime
 class EnemyKappa(Enemy):
     def __init__(self, pos, start_timer=20):
         super().__init__(pos, "kappa", ("kappa_fight", "kappa_kick"),
-                         speed=Vector2(0.5, 0.5), health=1, stamina=500, start_timer=start_timer,anchor_y=280,
+                         speed=Vector2(0.5, 0.5), health=5, stamina=500, start_timer=start_timer,anchor_y=280,
                          score=20, enemy_type=Enemy.EnemyType.NORMAL)
