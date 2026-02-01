@@ -45,7 +45,7 @@ class Game:
                         + "There are no pencils in the demons\nworld.\n" \
                         + "There is no paper, only hunger,\nhate and rage. \n" \
                         + "But I collected some pieces there\n" \
-                        + "some pieces here and i managed\nto draw this face of a human. \n" \
+                        + "some pieces here and I managed\nto draw this face of a human. \n" \
                         + "Now finally I can walk among them."
 
         self.outro_text = "\nI defeated all this other demons \n" \
@@ -94,13 +94,26 @@ class Game:
             {"type": "center", "text": ""},
             {"type": "side", "side": "left", "image": "credits/tengu","text": "天狗 (Tengu)\nTengu are mountain yōkai\nwith an appearance\nthat is half human and half bird.\nThey are masters of martial arts and\nswordsmanship,\nextremely skilled and powerful.\nProud and severe, they punish arrogance\nand vanity."},
             {"type": "center", "text": ""},
-            {"type": "side", "side": "right", "image": "credits/inari", "text": "稲荷 (Inari)\nInari is a kami associated with rice,\nabundance, and prosperity.Inari is often\naccompanied by sacred foxes,known as\nkitsune, who act as messengers."},
+            {"type": "side", "side": "right", "image": "credits/inari", "text": "稲荷 (Inari)\nInari is a kami associated with rice,\nabundance, and prosperity. Inari is often\naccompanied by sacred foxes,known as\nkitsune, who act as messengers."},
 
             {"type": "center", "text": ""},
-            {"type": "center", "text": "Thanks everyone!", "header":"True"},
-            {"type": "center", "text": "Thanks to"},
+            {"type": "center", "text": "Thanks to", "header":"True"},
             {"type": "center", "image": "credits/bolognanerd"},
-            {"type": "center", "text": "See you at next Global Game Jam!"},
+            {"type": "center", "text": "See you at next Global Game Jam!", "header":"True"},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": "OK, that's it."},
+            {"type": "center", "text": "Turn off your computer and go to the sleep!"},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "center", "text": ""},
+            {"type": "end"},
         ]
         self.boss_intro_active = False
         self.boss_intro_phase = None
@@ -366,12 +379,14 @@ class Game:
         screen.blit("ui/status", (0, 0))
 
         for i in range(self.player.lives):
-            if self.player.extra_life_timer <= 0 or i < self.player.lives - 1:
-                sprite_idx = 9
-            else:
-                sprite_idx = min(9, (30 - self.player.extra_life_timer) // 3)
-
-            screen.blit(f"ui/status_life{sprite_idx}", (i * 46 - 55, -35))
+            # if self.player.extra_life_timer <= 0 or i < self.player.lives - 1:
+            #      sprite_idx = 9
+            #  else:
+            #      sprite_idx = min(9, (30 - self.player.extra_life_timer) // 3)
+            sprite_idx = 9
+            img = images.load(f"ui/status_life{sprite_idx}")
+            img = pygame.transform.smoothscale(img, (img.get_width() * 0.25, img.get_height() * 0.25))
+            screen.blit(img, (i * 35 + 10, 25))
 
         # Show score
         draw_text(screen, f"{self.score:04}", WIDTH // 2, 0, True)
@@ -464,6 +479,8 @@ class Game:
 
                 for i, line in enumerate(lines):
                     draw_text_otf(screen, line, text_x, y + i * line_height, font_credits, (255, 255, 255))
+            elif item.get("type") == "end":
+                self.credits_scroll_speed = 0
 
     def prepare_boss_intro(self, stage):
         self.boss_intro_active = True
