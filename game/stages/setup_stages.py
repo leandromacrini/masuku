@@ -76,8 +76,8 @@ STAGES = (
     Stage(max_scroll_x=4200,name="Yukionna1",
           enemies=[EnemyKappa(pos=(5000, 400), start_timer=50)]),
 
-    BossStage(max_scroll_x=5800,name="Yukionna_boss",
-              boss=EnemyYukiOnna(pos=(6600, 400)),
+    BossStage(max_scroll_x=5000,name="Yukionna_boss",
+              boss=EnemyYukiOnna(pos=(5800, 400)),
               music_track="final_boss",
               weather="snow",
               ),
@@ -97,8 +97,8 @@ STAGES = (
     Stage(max_scroll_x=8600,name="Inari1",
           enemies=[EnemyKappa(pos=(9300, 400), start_timer=50)]),
 
-    BossStage(max_scroll_x=10300,name="Inari4",
-              boss=EnemyYukiOnna(pos=(21500, 400)), #da cambiare
+    BossStage(max_scroll_x=10000,name="Inari4",
+              boss=EnemyYukiOnna(pos=(10500, 400)), #da cambiare
               music_track="final_boss",
               weather="leafs",
               ),
