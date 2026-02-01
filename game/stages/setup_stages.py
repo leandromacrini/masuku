@@ -1,5 +1,4 @@
 from game import config
-from game.entities.EnemyKappa import EnemyKappa
 from game.entities.EnemyBoss import EnemyBoss
 from game.entities.EnemyHoodie import EnemyHoodie
 from game.entities.EnemyPortal import EnemyPortal
@@ -9,6 +8,9 @@ from game.entities.EnemyTanuki import EnemyTanuki
 from game.entities.EnemyKasaobake import EnemyKasaobake
 from game.entities.EnemyYukiOnna import  EnemyYukiOnna
 from game.entities.EnemyTengu import  EnemyTengu
+from game.entities.EnemyInari import  EnemyInari
+from game.entities.EnemyKappa import  EnemyKappa
+
 from game.entities.ExtraLifePowerup import ExtraLifePowerup
 from game.entities.HealthPowerup import HealthPowerup
 from game.entities.Barrel import Barrel
@@ -38,71 +40,71 @@ def setup_stages():
 def setup_stage_final():
     global STAGES
 
-STAGES = (
-    Stage(max_scroll_x=0, enemies=[], weather=None, music_track="theme_jap"),
+    STAGES = (
+        Stage(max_scroll_x=0, enemies=[], weather=None, music_track="theme_jap"),
 
-    # ============================================================================
-    # kasaobake
-    Stage(name="kasaobake0", max_scroll_x=600,
-          enemies=[EnemyKappa(pos=(1400, 400), start_timer=50)]),
+        # ============================================================================
+        # kasaobake
+        Stage(name="kasaobake0", max_scroll_x=600,
+              enemies=[EnemyKappa(pos=(1400, 400), start_timer=50)]),
 
-    Stage(name="kasaobake1", max_scroll_x=900,
-          enemies=[EnemyKappa(pos=(1800, 300), start_timer=50),
-                   EnemyKappa(pos=(1700, 400), start_timer=23)]),
+        Stage(name="kasaobake1", max_scroll_x=900,
+              enemies=[EnemyKappa(pos=(1800, 300), start_timer=50),
+                       EnemyKappa(pos=(1700, 400), start_timer=23)]),
 
-    Stage(max_scroll_x=1400,name="kasaobake2",
-          enemies=[EnemyKappa(pos=(2100, 380), start_timer=50)]
-          ),
-
-    BossStage(max_scroll_x=1900,name="kasaobake3",
-              boss=EnemyKasaobake(pos=(2400, 400)),
-              music_track="final_boss",
-              weather="rain",
+        Stage(max_scroll_x=1400,name="kasaobake2",
+              enemies=[EnemyKappa(pos=(2100, 380), start_timer=50)]
               ),
 
-    # ============================================================================
-    # Tanuki
-    Stage(max_scroll_x=2500,name="Tanuki1",
-          enemies=[EnemyKappa(pos=(3000, 400), start_timer=50)]),
+        BossStage(max_scroll_x=1900,name="kasaobake3",
+                  boss=EnemyKasaobake(pos=(2400, 400)),
+                  music_track="final_boss",
+                  weather="rain",
+                  ),
 
-    BossStage(max_scroll_x=3000,name="Tanuki_boss",
-              boss=EnemyYukiOnna(pos=(3800, 400)), # da cambiare
-              music_track="final_boss",
-              weather="leafs",
-              ),
+        # ============================================================================
+        # Tanuki
+        Stage(max_scroll_x=2500,name="Tanuki1",
+              enemies=[EnemyKappa(pos=(3000, 400), start_timer=50)]),
 
-    # ============================================================================
-    # YukiOnna
-    Stage(max_scroll_x=4200,name="Yukionna1",
-          enemies=[EnemyKappa(pos=(5000, 400), start_timer=50)]),
+        BossStage(max_scroll_x=3000,name="Tanuki_boss",
+                  boss=EnemyTanuki(pos=(3800, 400)), # da cambiare
+                  music_track="final_boss",
+                  weather="leafs",
+                  ),
 
-    BossStage(max_scroll_x=5000,name="Yukionna_boss",
-              boss=EnemyYukiOnna(pos=(5800, 400)),
-              music_track="final_boss",
-              weather="snow",
-              ),
-    # ============================================================================
-    # Tengu
-    Stage(max_scroll_x=6200,name="Tengu1",
-          enemies=[EnemyKappa(pos=(7000, 400), start_timer=50)]),
+        # ============================================================================
+        # YukiOnna
+        Stage(max_scroll_x=4200,name="Yukionna1",
+              enemies=[EnemyKappa(pos=(5000, 400), start_timer=50)]),
 
-    BossStage(max_scroll_x=7800,name="Tengu4",
-              boss=EnemyYukiOnna(pos=(7800, 400)), #da cambiare
-              music_track="final_boss",
-              weather="rain",
-              ),
+        BossStage(max_scroll_x=5000,name="Yukionna_boss",
+                  boss=EnemyYukiOnna(pos=(5800, 400)),
+                  music_track="final_boss",
+                  weather="snow",
+                  ),
+        # ============================================================================
+        # Tengu
+        Stage(max_scroll_x=6200,name="Tengu1",
+              enemies=[EnemyKappa(pos=(7000, 400), start_timer=50)]),
 
-    # ============================================================================
-    # Inari
-    Stage(max_scroll_x=8600,name="Inari1",
-          enemies=[EnemyKappa(pos=(9300, 400), start_timer=50)]),
+        BossStage(max_scroll_x=7800,name="Tengu4",
+                  boss=EnemyTengu(pos=(7800, 400)), #da cambiare
+                  music_track="final_boss",
+                  weather="rain",
+                  ),
 
-    BossStage(max_scroll_x=10000,name="Inari4",
-              boss=EnemyYukiOnna(pos=(10500, 400)), #da cambiare
-              music_track="final_boss",
-              weather="leafs",
-              ),
-)
+        # ============================================================================
+        # Inari
+        Stage(max_scroll_x=8600,name="Inari1",
+              enemies=[EnemyKappa(pos=(9300, 400), start_timer=50)]),
+
+        BossStage(max_scroll_x=10000,name="Inari4",
+                  boss=EnemyInari(pos=(10500, 400)), #da cambiare
+                  music_track="final_boss",
+                  weather="leafs",
+                  ),
+        )
 
 def setup_stages2():
 
